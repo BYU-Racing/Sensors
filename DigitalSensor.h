@@ -1,34 +1,15 @@
 #ifndef DIGITALSENSOR_H
 #define DIGITALSENSOR_H
 
-#include "Sensor.h"
 #include <Arduino.h>
+#include "Sensor.h"
 
-class DigitalSensor : public Sensor {
-private:
-    // Additional attributes specific to DigitalSensor
-
-    int sensorValue = 0;
-
+class DigitalSensor final : public Sensor
+{
+    uint8_t pin = 0;
 public:
-    // Constructor
-    DigitalSensor(int id, int time, int pin, bool isCritical);
-
-    // Implement the pure virtual functions from the base class
-    int readInputs() override;
-    bool readyToCheck();
-    bool plugTest() override;
-
-    // Additional methods for DigitalSensor
-    int getPins();
-    int getWaitTime();
-    int getDataLength();
-    int getId();
-
-    int rescale(int data);
-    int* buildData(int value);
-    int* buildError();
-    bool getCritical() override;
+    DigitalSensor(uint32_t id, bool criticality, uint8_t pin, uint32_t readInterval);
+    SensorData read() override;
 };
 
-#endif // DIGITALSENSOR_H
+#endif //DIGITALSENSOR_H
