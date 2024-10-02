@@ -1,44 +1,39 @@
-// TODO: Add doc string
-
-
 #ifndef SENSOR_H
 #define SENSOR_H
 
 #include <Arduino.h>
+#include "SensorData.h"
 
-// CHECK moving this here should save a small amount of space
-#define ARRAY_SIZE 4
-
-class Sensor {
+/**
+ * Interface Sensors must implement
+ */
+class Sensor
+{
 protected:
-    // Instantiate attributes
-    int inputPins[ARRAY_SIZE];
-    int waitTime;
-    unsigned long previousUpdateTime = 0;
-    int sensorID;
-    int dataLength;
-    bool critical;
-
+    /** the sensor id */
+    uint32_t id = 0;
+    /** the sensor criticality */
+    bool criticality = false;
+    /** the interval a sensor should read at */
+    uint32_t readInterval = 0;
+    /** the last time a read occured */
+    uint32_t lastRead = 0;
 public:
-
-    //virtual ~Sensor();
-    virtual int getId() = 0;
-    virtual int getDataLength() = 0;
-
-    // Declare a pure virtual function
-    virtual int readInputs() = 0;
-
-    // Method to check if it's ready to read
-    bool readyToCheck(){
-        return (waitTime <= int(millis() - previousUpdateTime));
-    }
-
-    // Method to transform data
-    virtual int rescale(int data) = 0;
-    virtual int* buildData(int value) = 0;
-    virtual int* buildError() = 0;
-    virtual bool getCritical();
-    virtual bool plugTest();
+    virtual ~Sensor() = default;
+    /** @return the sensor id */
+    [[nodiscard]] uint32_t getId() const;
+    /** @return the sensor criticality */
+    [[nodiscard]] bool isCritical() const;
+    /**
+     * Get the ready state of the sensor prior to reading
+     * @return the ready state of the sensor
+     */
+    virtual bool ready();
+    /**
+     * "Fill" a sensorData object with sensor information for sending over a CAN bus
+     * @return sensorData object containing the sensor data and CAN msgs
+     */
+    virtual SensorData read() = 0;
 };
 
-#endif // SENSOR_H
+#endif //SENSOR_H
