@@ -4,15 +4,19 @@
 #include <Arduino.h>
 
 /**
- * Helper for converting to and from raw bytes
+ * Helper for converting types to and from raw bytes
  */
 class ByteConverter
 {
 public:
-    static float toFloat(const uint8_t* bytes);
-    static void toBytes(float value, uint8_t* buf);
-    static int toInt(const uint8_t* bytes);
-    static void toBytes(int value, uint8_t* buf);
+    static void uint32ToBytes(uint32_t value, uint8_t* buf);
+    static uint32_t uint32FromBytes(const uint8_t* bytes);
+
+    static void floatToBytes(float value, uint8_t* buf);
+    static float floatFromBytes(const uint8_t* bytes);
+
+    static void intToBytes(int value, uint8_t* buf);
+    static int intFromBytes(const uint8_t* bytes);
 };
 
 #endif //BYTECONVERTER_H
