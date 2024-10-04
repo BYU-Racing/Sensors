@@ -15,7 +15,7 @@ SensorData AnalogSensor::read()
     SensorData sensorData = SensorData(id, 1);
 
     uint8_t buf[sizeof(int)];
-    ByteConverter::toBytes(analogRead(pin), buf);
+    ByteConverter::intToBytes(analogRead(pin), buf);
     sensorData.setMsg(buf, 4);
 
     return sensorData;
