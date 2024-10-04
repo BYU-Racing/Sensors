@@ -34,6 +34,11 @@ public:
      * @return sensorData object containing the sensor data and CAN msgs
      */
     virtual SensorData read() = 0;
+    /**
+     * Print a CAN message data with sensor context (i.e. Sensor Name; named, scaled values with units)
+     * @param canMsg msg to debug
+     */
+    virtual void debugPrint(const CAN_message_t& canMsg) const;
 };
 
 #endif //SENSOR_H
