@@ -20,3 +20,19 @@ SensorData AnalogSensor::read()
 
     return sensorData;
 }
+
+Pot::Pot(
+    const uint32_t id, const bool criticality, const uint8_t pin, const uint32_t readInterval, const char* name
+) : AnalogSensor(id, criticality, pin, readInterval), name(name) {  }
+
+void Pot::debugPrint(const CAN_message_t& canMsg) const
+{
+    Serial.print(name);
+    Serial.println(" Potentiometer CAN Message:");
+    Serial.print("Timestamp: ");
+    Serial.println(canMsg.timestamp);
+    const int value = ByteConverter::intFromBytes(canMsg.buf);
+    Serial.print("Value: ");
+    Serial.println(value);
+    Serial.println();
+}
