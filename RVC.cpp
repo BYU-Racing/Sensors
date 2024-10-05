@@ -1,19 +1,18 @@
-#include "IMU.h"
+#include "RVC.h"
 #include "ByteConverter.h"
 
-IMU::IMU(const uint32_t id, const bool criticality, const uint32_t readInterval, Adafruit_BNO08x_RVC* rvc)
+RVC::RVC(const uint32_t id, const bool criticality, const uint32_t readInterval, Adafruit_BNO08x_RVC* rvc)
 {
     this->id = id;
     this->criticality = criticality;
     this->readInterval = readInterval;
     this->rvc = rvc;
-    this->serial = serial;
     heading = new BNO08x_RVC_Data;
 }
 
-IMU::~IMU() { delete heading; }
+RVC::~RVC() { delete heading; }
 
-bool IMU::ready()
+bool RVC::ready()
 {
     if (millis() - lastRead >= readInterval)
     {
@@ -22,13 +21,13 @@ bool IMU::ready()
     return false;
 }
 
-void IMU::pack(uint8_t* buf, const float value, const uint8_t id)
+void RVC::pack(uint8_t* buf, const float value, const uint8_t id)
 {
     buf[0] = id;
     ByteConverter::floatToBytes(value, &buf[1]);
 }
 
-float IMU::unpack(const uint8_t* buf)
+float RVC::unpack(const uint8_t* buf)
 {
     uint8_t bytes[sizeof(float)];
     for (size_t i = 0; i < sizeof(float); i++)
@@ -38,7 +37,7 @@ float IMU::unpack(const uint8_t* buf)
     return ByteConverter::floatFromBytes(bytes);
 }
 
-SensorData IMU::read()
+SensorData RVC::read()
 {
     lastRead = millis();
     SensorData sensorData = SensorData(id, 6);
@@ -78,7 +77,7 @@ SensorData IMU::read()
     return sensorData;
 }
 
-void IMU::printValue(const char label[], const float value, const char units[])
+void RVC::printValue(const char label[], const float value, const char units[])
 {
     Serial.print(label);
     Serial.print(": ");
@@ -87,9 +86,9 @@ void IMU::printValue(const char label[], const float value, const char units[])
     Serial.println(units);
 }
 
-void IMU::debugPrint(const CAN_message_t& canMsg) const
+void RVC::debugPrint(const CAN_message_t& canMsg) const
 {
-    Serial.println("IMU CAN Message:");
+    Serial.println("RVC CAN Message:");
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
     const float value = unpack(canMsg.buf);
