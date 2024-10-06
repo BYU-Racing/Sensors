@@ -6,6 +6,21 @@ DigitalSensor::DigitalSensor(const uint32_t id, const bool criticality, const ui
     this->criticality = criticality;
     this->readInterval = readInterval;
     this->pin = pin;
+    pinMode(pin, INPUT_PULLDOWN);
+}
+
+bool DigitalSensor::healthCheck() const
+{
+    pinMode(pin, INPUT_PULLDOWN);
+    if (digitalRead(pin) == 0) {
+        pinMode(pin, INPUT_PULLUP);
+        if(digitalRead(pin == 0)) {
+            pinMode(pin, INPUT_PULLDOWN);
+            return true;
+        }
+    }
+    pinMode(pin, INPUT_PULLDOWN);
+    return false;
 }
 
 SensorData DigitalSensor::read()
@@ -17,20 +32,4 @@ SensorData DigitalSensor::read()
     sensorData.setMsg(buf, 1);
 
     return sensorData;
-}
-
-Switch::Switch(
-    const uint32_t id, const bool criticality, const uint8_t pin, const uint32_t readInterval, const char* name
-) : DigitalSensor(id, criticality, pin, readInterval), name(name) {  }
-
-void Switch::debugPrint(const CAN_message_t& canMsg) const
-{
-    Serial.print(name);
-    Serial.println(" Switch CAN Message:");
-    Serial.print("Timestamp: ");
-    Serial.println(canMsg.timestamp);
-    const uint8_t value = canMsg.buf[0];
-    Serial.print("State: ");
-    Serial.println(value == 1 ? "On" : "Off");
-    Serial.println();
 }
