@@ -11,6 +11,7 @@ class SensorData
     CAN_message_t* msgs = nullptr;
     CAN_message_t newMsg(const uint8_t* buf, size_t len) const;
 public:
+    SensorData() = default;
     SensorData(uint32_t id, size_t msgCount);
     ~SensorData() { delete[] msgs; }
     size_t getMsgCount() const;
