@@ -24,6 +24,8 @@ public:
     [[nodiscard]] uint32_t getId() const;
     /** @return the sensor criticality */
     [[nodiscard]] bool isCritical() const;
+    /** @return the health of a sensor object */
+    [[nodiscard]] virtual bool healthCheck() const;
     /**
      * Get the ready state of the sensor prior to reading
      * @return the ready state of the sensor
