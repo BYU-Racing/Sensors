@@ -48,29 +48,29 @@ SensorData RVC::read()
     uint8_t x_accelBuf[len];
     pack(x_accelBuf, heading->x_accel, bufferIndex);
     sensorData.setMsg(x_accelBuf, len, bufferIndex);
+    bufferIndex++;
 
     uint8_t y_accelBuf[len];
-    bufferIndex = 1;
     pack(y_accelBuf, heading->y_accel, bufferIndex);
     sensorData.setMsg(y_accelBuf, len, bufferIndex);
+    bufferIndex++;
 
     uint8_t z_accelBuf[len];
-    bufferIndex = 2;
     pack(z_accelBuf, heading->z_accel, bufferIndex);
     sensorData.setMsg(z_accelBuf, len, bufferIndex);
+    bufferIndex++;
 
     uint8_t yawBuf[len];
-    bufferIndex = 3;
     pack(yawBuf, heading->yaw, bufferIndex);
     sensorData.setMsg(yawBuf, len, bufferIndex);
+    bufferIndex++;
 
     uint8_t pitchBuf[len];
-    bufferIndex = 4;
     pack(pitchBuf, heading->pitch, bufferIndex);
     sensorData.setMsg(pitchBuf, len, bufferIndex);
+    bufferIndex++;
 
     uint8_t rollBuf[len];
-    bufferIndex = 5;
     pack(rollBuf, heading->roll, bufferIndex);
     sensorData.setMsg(rollBuf, len, bufferIndex);
 
