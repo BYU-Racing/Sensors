@@ -4,6 +4,8 @@ uint32_t Sensor::getId() const { return id; }
 
 bool Sensor::isCritical() const { return criticality; }
 
+bool Sensor::healthCheck() const { return true; } // Unsure what best default is?
+
 bool Sensor::ready() { return millis() - lastRead >= readInterval; }
 
 void Sensor::debugPrint(const CAN_message_t& canMsg) const
