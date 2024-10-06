@@ -10,9 +10,11 @@ RVC::RVC(const uint32_t id, const bool criticality, const uint32_t readInterval,
     heading = new BNO08x_RVC_Data;
 }
 
-bool RVC::healthCheck() const { return rvc; } // RVC has a bool operator override so this is OK
-
 RVC::~RVC() { delete heading; }
+
+void RVC::begin(HardwareSerial* serial) { rvc->begin(serial); }
+
+bool RVC::healthCheck() const { return rvc; } // RVC has a bool operator override so this is OK
 
 bool RVC::ready()
 {
