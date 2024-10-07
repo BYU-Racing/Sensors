@@ -14,9 +14,6 @@ struct euler_t
     float yaw;
 };
 
-/** Multiply with F_RAD_TO_DEG to convert from radians to degrees */
-#define F_RAD_TO_DEG static_cast<float>(RAD_TO_DEG);
-
 /**
  * Calculates the roll (x-axis) angle from a normalized quaternion
  * @return the roll
@@ -36,19 +33,25 @@ float quaternionToPitch(float q0, float q1, float q2, float q3);
 float quaternionToYaw(float q0, float q1, float q2, float q3);
 
 /**
- * Gets the change in theta between to angles in degrees.
- * The delta angle is wrapped across the -180/180 degree boundary.
- * @param newAngle expected to be in range (-180, 180)
- * @param prevAngle expected to be in range (-360, 360)
- * @return the delta angle
- */
-float delta(float newAngle, float prevAngle);
-
-/**
  * Calculates the Euler angles from an unnormalized quaternion.
  * @return the Euler angles
  */
 euler_t quaternionToEuler(float qr, float qi, float qj, float qk);
+
+/** @return an angle normalized between [-180, 180] */
+float normalize180(float angle);
+
+/** @return an angle normalized between [-360, 360] */
+float normalize360(float angle);
+
+/**
+ * Gets the change in theta between two angles in degrees and applies it
+ * The angle is wrapped across the -180/180 degree boundary and normalized to [-360, 360].
+ * @param newAngle expected to be in range [-180, 180]
+ * @param prevAngle expected to be in range [-360, 360]
+ * @return the result angle in range [-360, 360]
+ */
+float updateAngle(float newAngle, float prevAngle);
 
 /** Quaternion representation of an absolute rotation vector */
 struct RotationVector

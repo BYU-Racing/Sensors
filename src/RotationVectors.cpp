@@ -3,6 +3,9 @@
 constexpr float D_180 = 180.0f;
 constexpr float D_360 = 360.0f;
 
+/** Multiply with F_RAD_TO_DEG to convert from radians to degrees */
+constexpr float F_RAD_TO_DEG = static_cast<float>(RAD_TO_DEG);
+
 float quaternionToRoll(const float q0, const float q1, const float q2, const float q3)
 {
     // Combined Sine of Roll and Cosine of Pitch
@@ -37,28 +40,6 @@ float quaternionToYaw(const float q0, const float q1, const float q2, const floa
     return atan2(sinYcosP, cosYcosP) * F_RAD_TO_DEG;
 }
 
-float delta(const float newAngle, float prevAngle)
-{
-    // Adjust for previous angle that is outside of -180, 180 bounds
-    if (prevAngle > D_180)
-    {
-        prevAngle -= D_360;
-    } else if (prevAngle < -D_180)
-    {
-        prevAngle += D_360;
-    }
-    float delta = newAngle - prevAngle;
-    // Get delta inside of -360, 360 bounds
-    if (delta > D_180)
-    {
-        delta -= D_360;
-    } else if (delta < -D_180)
-    {
-        delta += D_360;
-    }
-    return delta;
-}
-
 euler_t quaternionToEuler(const float qr, const float qi, const float qj, const float qk)
 {
     // Normalize quaternion
@@ -84,4 +65,43 @@ euler_t quaternionToEuler(const float qr, const float qi, const float qj, const 
     const float yaw = quaternionToYaw(q0, q1, q2, q3);
 
     return euler_t { yaw, pitch, roll };
+}
+
+float normalize180(float angle)
+{
+    while (angle > D_180)
+    {
+        angle -= D_360;
+    }
+    while (angle < -D_180)
+    {
+        angle += D_360;
+    }
+    return angle;
+}
+
+float normalize360(float angle)
+{
+    while (angle > D_360)
+    {
+        angle -= D_180;
+    }
+    while (angle < -D_360)
+    {
+        angle += D_180;
+    }
+    return angle;
+}
+
+float updateAngle(const float newAngle, const float prevAngle)
+{
+    float delta = normalize180(newAngle) - normalize180(prevAngle);
+    if (delta > D_180)
+    {
+        delta -= D_360;
+    } else if (delta < -D_180)
+    {
+        delta += D_360;
+    }
+    return normalize360(prevAngle + delta);
 }
