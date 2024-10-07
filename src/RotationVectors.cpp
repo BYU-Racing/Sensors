@@ -37,15 +37,24 @@ float quaternionToYaw(const float q0, const float q1, const float q2, const floa
     return atan2(sinYcosP, cosYcosP) * F_RAD_TO_DEG;
 }
 
-float delta(const float newAngle, const float prevAngle)
+float delta(const float newAngle, float prevAngle)
 {
+    // Adjust for previous angle that is outside of -180, 180 bounds
+    if (prevAngle > D_180)
+    {
+        prevAngle -= D_360;
+    } else if (prevAngle < -D_180)
+    {
+        prevAngle += D_360;
+    }
     float delta = newAngle - prevAngle;
+    // Get delta inside of -360, 360 bounds
     if (delta > D_180)
     {
-        delta = D_360 - delta;
+        delta -= D_360;
     } else if (delta < -D_180)
     {
-        delta = delta - D_360;
+        delta += D_360;
     }
     return delta;
 }
