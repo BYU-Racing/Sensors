@@ -23,11 +23,12 @@ RotationSensor::~RotationSensor()
 
 void RotationSensor::begin(HardwareSerial* serial)
 {
+    constexpr uint16_t millisToMicros = 1000;
     imu->begin_UART(serial, static_cast<int32_t>(id));
-    imu->enableReport(report, readInterval);
+    imu->enableReport(report, readInterval * millisToMicros);
 }
 
-bool RotationSensor::healthCheck() const { return imu; } // imu has bool operator override so this is OK
+bool RotationSensor::healthCheck() const { return imu != nullptr; } // Unsure if this is best health check?
 
 bool RotationSensor::ready()
 {
@@ -40,10 +41,10 @@ bool RotationSensor::ready()
 
 void RotationSensor::updateYPR(euler_t* ypr, const RotationVector& rv)
 {
-    const auto [yaw, pitch, roll] = quaternionToEuler(rv.real, rv.i, rv.j, rv.k);
-    ypr->yaw += delta(yaw, ypr->yaw);
-    ypr->pitch += delta(pitch, ypr->pitch);
+    const auto [roll, pitch, yaw] = quaternionToEuler(rv.real, rv.i, rv.j, rv.k);
     ypr->roll += delta(roll, ypr->roll);
+    ypr->pitch += delta(pitch, ypr->pitch);
+    ypr->yaw += delta(yaw, ypr->yaw);
 }
 
 void RotationSensor::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, const uint8_t subSensorId)
@@ -122,9 +123,9 @@ void RotationSensor::debugPrint(const CAN_message_t& canMsg) const
     Serial.println("Rotation Sensor CAN Message:");
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
-    uint8_t* id = new uint8_t(INVALID_ID);
-    const float value = BufferPacker::unpackFloat(canMsg.buf, true, id);
-    switch (*id)
+    uint8_t id = INVALID_ID;
+    const float value = BufferPacker::unpackFloat(canMsg.buf, true, &id);
+    switch (id)
     {
     case Roll:
         printValue("Roll", value, "deg");
@@ -139,5 +140,4 @@ void RotationSensor::debugPrint(const CAN_message_t& canMsg) const
         break;
     }
     Serial.println();
-    delete id;
 }
