@@ -26,13 +26,13 @@ bool RVC::ready()
     return false;
 }
 
-void RVC::setMsg(SensorData* sensorData, uint8_t* index, const float value, const uint8_t subSensorId)
+void RVC::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, const uint8_t subSensorId)
 {
     constexpr size_t bufferLen = sizeof(float) + 1;
     uint8_t buf[bufferLen];
     BufferPacker::packFloat(buf, value, subSensorId);
-    sensorData->setMsg(buf, bufferLen, *index);
-    (*index)++;
+    sensorData->setMsg(buf, bufferLen, *msgIndex);
+    (*msgIndex)++;
 }
 
 SensorData RVC::read()
@@ -40,14 +40,14 @@ SensorData RVC::read()
     lastRead = millis();
     SensorData sensorData = SensorData(id, rvcMsgCount);
 
-    uint8_t bufferIndex = 0; // used for prependId and message index
+    uint8_t msgIndex = 0; // used for prependId and message index
 
-    setMsg(&sensorData, &bufferIndex, heading->x_accel, X_Accel);
-    setMsg(&sensorData, &bufferIndex, heading->y_accel, Y_Accel);
-    setMsg(&sensorData, &bufferIndex, heading->z_accel, Z_Accel);
-    setMsg(&sensorData, &bufferIndex, heading->roll, Roll);
-    setMsg(&sensorData, &bufferIndex, heading->pitch, Pitch);
-    setMsg(&sensorData, &bufferIndex, heading->yaw, Yaw);
+    setMsg(&sensorData, &msgIndex, heading->x_accel, X_Accel);
+    setMsg(&sensorData, &msgIndex, heading->y_accel, Y_Accel);
+    setMsg(&sensorData, &msgIndex, heading->z_accel, Z_Accel);
+    setMsg(&sensorData, &msgIndex, heading->roll, Roll);
+    setMsg(&sensorData, &msgIndex, heading->pitch, Pitch);
+    setMsg(&sensorData, &msgIndex, heading->yaw, Yaw);
 
     return sensorData;
 }
