@@ -6,13 +6,20 @@
 #include "Sensor.h"
 #include "RotationVectors.h"
 
+enum rotationSensorSubSensorId : uint8_t
+{
+    Roll = 0,
+    Pitch = 1,
+    Yaw = 2,
+};
+
 class RotationSensor final : public Sensor {
     Adafruit_BNO08x* imu = nullptr;
     sh2_SensorId_t report = 0;
     sh2_SensorValue_t* sensorValue = nullptr;
     euler_t* ypr = nullptr;
     static void updateYPR(euler_t* ypr, const RotationVector& rv);
-    static void setMsg(SensorData* sensorData, uint8_t* index, float value);
+    static void setMsg(SensorData* sensorData, uint8_t* msgIndex, float value, uint8_t subSensorId);
     static void printValue(const char label[], float value, const char units[]);
 public:
     RotationSensor(

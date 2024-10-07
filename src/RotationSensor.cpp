@@ -46,13 +46,13 @@ void RotationSensor::updateYPR(euler_t* ypr, const RotationVector& rv)
     ypr->roll += delta(roll, ypr->roll);
 }
 
-void RotationSensor::setMsg(SensorData* sensorData, uint8_t* index, const float value)
+void RotationSensor::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, const uint8_t subSensorId)
 {
     constexpr size_t bufferLen = sizeof(float) + 1;
     uint8_t buf[bufferLen];
-    BufferPacker::packFloat(buf, value, *index);
-    sensorData->setMsg(buf, bufferLen, *index);
-    (*index)++;
+    BufferPacker::packFloat(buf, value, subSensorId);
+    sensorData->setMsg(buf, bufferLen, *msgIndex);
+    (*msgIndex)++;
 }
 
 SensorData RotationSensor::read()
@@ -99,11 +99,11 @@ SensorData RotationSensor::read()
 
         updateYPR(ypr, rv);
 
-        uint8_t bufferIndex = 0; // used for prependId and message index
+        uint8_t msgIndex = 0; // used for prependId and message index
 
-        setMsg(&sensorData, &bufferIndex, ypr->roll);
-        setMsg(&sensorData, &bufferIndex, ypr->pitch);
-        setMsg(&sensorData, &bufferIndex, ypr->yaw);
+        setMsg(&sensorData, &msgIndex, ypr->roll, Roll);
+        setMsg(&sensorData, &msgIndex, ypr->pitch, Pitch);
+        setMsg(&sensorData, &msgIndex, ypr->yaw, Yaw);
     }
     return sensorData;
 }
@@ -122,17 +122,17 @@ void RotationSensor::debugPrint(const CAN_message_t& canMsg) const
     Serial.println("Rotation Sensor CAN Message:");
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
-    uint8_t* id = new uint8_t(0xFF);
+    uint8_t* id = new uint8_t(INVALID_ID);
     const float value = BufferPacker::unpackFloat(canMsg.buf, true, id);
     switch (*id)
     {
-    case 0:
+    case Roll:
         printValue("Roll", value, "deg");
         break;
-    case 1:
+    case Pitch:
         printValue("Pitch", value, "deg");
         break;
-    case 2:
+    case Yaw:
         printValue("Yaw", value, "deg");
         break;
     default:

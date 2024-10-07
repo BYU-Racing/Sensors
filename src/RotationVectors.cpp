@@ -1,5 +1,7 @@
 #include "RotationVectors.h"
 
+constexpr float D_180 = 180.0f;
+constexpr float D_360 = 360.0f;
 
 float quaternionToRoll(const float q0, const float q1, const float q2, const float q3)
 {
@@ -38,12 +40,12 @@ float quaternionToYaw(const float q0, const float q1, const float q2, const floa
 float delta(const float newAngle, const float prevAngle)
 {
     float delta = newAngle - prevAngle;
-    if (delta > 180.0f)
+    if (delta > D_180)
     {
-        delta = 360.0f - delta;
-    } else if (delta < -180.0f)
+        delta = D_360 - delta;
+    } else if (delta < -D_180)
     {
-        delta = delta - 360.0f;
+        delta = delta - D_360;
     }
     return delta;
 }
