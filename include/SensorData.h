@@ -13,7 +13,9 @@ class SensorData
 public:
     SensorData() = default;
     SensorData(uint32_t id, size_t msgCount);
-    ~SensorData() { delete[] msgs; }
+    SensorData(const SensorData& other);
+    SensorData& operator=(const SensorData& other);
+    ~SensorData();
     size_t getMsgCount() const;
     CAN_message_t* getMsgs() const;
     bool setMsg(const uint8_t* buf, size_t len, size_t msgIndex=0);
