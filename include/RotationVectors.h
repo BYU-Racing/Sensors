@@ -39,7 +39,7 @@ float quaternionToYaw(float q0, float q1, float q2, float q3);
  * Gets the change in theta between to angles in degrees.
  * The delta angle is wrapped across the -180/180 degree boundary.
  * @param newAngle expected to be in range (-180, 180)
- * @param prevAngle expected to be in range (-180, 180)
+ * @param prevAngle expected to be in range (-360, 360)
  * @return the delta angle
  */
 float delta(float newAngle, float prevAngle);
