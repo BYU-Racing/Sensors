@@ -6,6 +6,8 @@
 #include "RVC.h"
 #include "RotationSensor.h"
 
+constexpr uint32_t BAUD_RATE = 115200;
+
 constexpr uint32_t R_DAMPER_ID = 1;
 constexpr bool R_DAMPER_CRITICALITY = false;
 constexpr uint8_t R_DAMPER_PIN = 22;
@@ -36,7 +38,7 @@ Adafruit_BNO08x_RVC bno1;
 RVC rvc = RVC(RVC_ID, RVC_CRITICALITY, RVC_INTERVAL, &bno1);
 Adafruit_BNO08x bno2;
 RotationSensor steeringWheel = RotationSensor(
-    STEERING_WHEEL_ID, STEERING_WHEEL_CRITICALITY, STEERING_WHEEL_INTERVAL, &bno2
+    STEERING_WHEEL_ID, STEERING_WHEEL_CRITICALITY, STEERING_WHEEL_INTERVAL, &bno2, SH2_ROTATION_VECTOR
 );
 
 Sensor* sensors[] = {
@@ -49,8 +51,8 @@ Sensor* sensors[] = {
 size_t numSensors = sizeof(sensors) / sizeof(sensors[0]);
 
 void setup() {
-    Serial.begin(115200);
-    Serial1.begin(115200);
+    Serial.begin(BAUD_RATE);
+    Serial1.begin(BAUD_RATE);
     rvc.begin(&Serial1);
     steeringWheel.begin(&Serial1);
 }
