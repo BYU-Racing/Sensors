@@ -91,7 +91,7 @@ float BufferPacker::unpackFloat(const uint8_t* buf, const bool hasId, uint8_t* i
     uint8_t bytes[sizeof(float)];
     if (hasId)
     {
-        if (id != nullptr) { *id = buf[0]; }
+        if (id != nullptr) { *id = buf[0]; } // caller wants to store the id
         for (size_t i = 1; i < sizeof(float) + 1; i++)
         {
             bytes[i - 1] = buf[i]; // All bytes after id bytes
