@@ -68,7 +68,7 @@ void RVC::debugPrint(const CAN_message_t& canMsg) const
     Serial.println(canMsg.timestamp);
     uint8_t* id = new uint8_t(0xFF);
     const float value = BufferPacker::unpackFloat(canMsg.buf, true, id);
-    switch (id)
+    switch (*id)
     {
     case 0:
         printValue("X Acceleration", value, "m/s^2");

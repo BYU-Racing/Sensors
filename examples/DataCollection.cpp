@@ -44,6 +44,7 @@ Sensor* sensors[] = {
     &leftDamperPot,
     &startSwitch,
     &rvc,
+    &steeringWheel,
 };
 size_t numSensors = sizeof(sensors) / sizeof(sensors[0]);
 
