@@ -7,11 +7,11 @@
 struct euler_t
 {
     // The x-axis angle
-    float yaw;
+    float roll;
     // The y-axis angle
     float pitch;
     // The z-axis angle
-    float roll;
+    float yaw;
 };
 
 /** Multiply with F_RAD_TO_DEG to convert from radians to degrees */
