@@ -1,18 +1,23 @@
 #include "BufferPacker.h"
 
+constexpr uint8_t BYTE_MASK = 0xFF;
+constexpr uint8_t OFFSET_3_BYTE = 24;
+constexpr uint8_t OFFSET_2_BYTE = 16;
+constexpr uint8_t OFFSET_1_BYTE = 8;
+
 void BufferPacker::uint32ToBytes(const uint32_t value, uint8_t* buf)
 {
-    buf[0] = static_cast<uint8_t>(value >> 24 & 0xFF);
-    buf[1] = static_cast<uint8_t>(value >> 16 & 0xFF);
-    buf[2] = static_cast<uint8_t>(value >> 8 & 0xFF);
-    buf[3] = static_cast<uint8_t>(value & 0xFF);
+    buf[0] = static_cast<uint8_t>(value >> OFFSET_3_BYTE & BYTE_MASK);
+    buf[1] = static_cast<uint8_t>(value >> OFFSET_2_BYTE & BYTE_MASK);
+    buf[2] = static_cast<uint8_t>(value >> OFFSET_1_BYTE & BYTE_MASK);
+    buf[3] = static_cast<uint8_t>(value & BYTE_MASK);
 }
 
 uint32_t BufferPacker::uint32FromBytes(const uint8_t* bytes)
 {
-    return static_cast<uint32_t>(bytes[0]) << 24 |
-        static_cast<uint32_t>(bytes[1]) << 16 |
-        static_cast<uint32_t>(bytes[2]) << 8 |
+    return static_cast<uint32_t>(bytes[0]) << OFFSET_3_BYTE |
+        static_cast<uint32_t>(bytes[1]) << OFFSET_2_BYTE |
+        static_cast<uint32_t>(bytes[2]) << OFFSET_1_BYTE |
         static_cast<uint32_t>(bytes[3]);
 }
 
@@ -43,7 +48,7 @@ int BufferPacker::intFromBytes(const uint8_t* bytes)
 
 void BufferPacker::packInt(uint8_t* buf, const int value, const uint8_t id)
 {
-    if (id == 0xFF)
+    if (id == INVALID_ID)
     {
         intToBytes(value, buf);
     } else
@@ -76,7 +81,7 @@ int BufferPacker::unpackInt(const uint8_t* buf, const bool hasId, uint8_t* id)
 
 void BufferPacker::packFloat(uint8_t* buf, const float value, const uint8_t id)
 {
-    if (id == 0xFF)
+    if (id == INVALID_ID)
     {
         floatToBytes(value, buf);
     } else

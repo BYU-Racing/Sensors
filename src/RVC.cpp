@@ -15,7 +15,7 @@ RVC::~RVC() { delete heading; }
 
 void RVC::begin(HardwareSerial* serial) { rvc->begin(serial); }
 
-bool RVC::healthCheck() const { return rvc; } // RVC has a bool operator override so this is OK
+bool RVC::healthCheck() const { return rvc != nullptr; } // RVC has a bool operator override so this is OK
 
 bool RVC::ready()
 {

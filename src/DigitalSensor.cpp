@@ -14,7 +14,7 @@ bool DigitalSensor::healthCheck() const
     pinMode(pin, INPUT_PULLDOWN);
     if (digitalRead(pin) == 0) {
         pinMode(pin, INPUT_PULLUP);
-        if(digitalRead(pin == 0)) {
+        if(digitalRead(pin) == 0) {
             pinMode(pin, INPUT_PULLDOWN);
             return true;
         }

@@ -3,6 +3,9 @@
 
 #include <Arduino.h>
 
+/** Value to represt a subSensorId that won't be used */
+constexpr uint8_t INVALID_ID = 0xFF;
+
 class BufferPacker {
 public:
     /**
@@ -48,7 +51,7 @@ public:
      * @param value value to store
      * @param id [Optional] value to store in the first slot as an id. 0xFF is invalid.
      */
-    static void packInt(uint8_t* buf, int value, uint8_t id = 0xFF);
+    static void packInt(uint8_t* buf, int value, uint8_t id = INVALID_ID);
     /**
      * Extracts an int from a Big Endian format buffer.
      * @param buf buffer to extract an int from.
@@ -65,7 +68,7 @@ public:
      * @param value value to store
      * @param id [Optional] value to store in the first slot as an id. 0xFF is invalid.
      */
-    static void packFloat(uint8_t* buf, float value, uint8_t id = 0xFF);
+    static void packFloat(uint8_t* buf, float value, uint8_t id = INVALID_ID);
     /**
      * Extracts a float from a Big Endian format buffer.
      * @param buf buffer to extract a float from.
