@@ -13,6 +13,7 @@ class RotationSensor final : public Sensor {
     euler_t* ypr = nullptr;
     static void updateYPR(euler_t* ypr, const RotationVector& rv);
     static void setMsg(SensorData* sensorData, uint8_t* index, float value);
+    static void printValue(const char label[], float value, const char units[]);
 public:
     RotationSensor(
         uint32_t id, bool criticality, uint32_t readInterval, Adafruit_BNO08x* imu,

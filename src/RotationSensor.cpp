@@ -38,6 +38,14 @@ bool RotationSensor::ready()
     return false;
 }
 
+void RotationSensor::updateYPR(euler_t* ypr, const RotationVector& rv)
+{
+    const auto [yaw, pitch, roll] = quaternionToEuler(rv.real, rv.i, rv.j, rv.k);
+    ypr->yaw += delta(yaw, ypr->yaw);
+    ypr->pitch += delta(pitch, ypr->pitch);
+    ypr->roll += delta(roll, ypr->roll);
+}
+
 void RotationSensor::setMsg(SensorData* sensorData, uint8_t* index, const float value)
 {
     constexpr size_t bufferLen = sizeof(float) + 1;
@@ -45,14 +53,6 @@ void RotationSensor::setMsg(SensorData* sensorData, uint8_t* index, const float 
     BufferPacker::packFloat(buf, value, *index);
     sensorData->setMsg(buf, bufferLen, *index);
     (*index)++;
-}
-
-void RotationSensor::updateYPR(euler_t* ypr, const RotationVector& rv)
-{
-    const auto [yaw, pitch, roll] = quaternionToEuler(rv.real, rv.i, rv.j, rv.k);
-    ypr->yaw += delta(yaw, ypr->yaw);
-    ypr->pitch += delta(pitch, ypr->pitch);
-    ypr->roll += delta(roll, ypr->roll);
 }
 
 SensorData RotationSensor::read()
@@ -64,6 +64,7 @@ SensorData RotationSensor::read()
     if (sensorValue->sensorId == report) // TODO: Remove multiple options after testing which Rotation Vector is best
     {
         RotationVector rv;
+
         switch (sensorValue->sensorId)
         {
         case SH2_ROTATION_VECTOR:
@@ -89,11 +90,14 @@ SensorData RotationSensor::read()
             /// Made for rotation?
 
             rv = RotationVector(sensorValue->un.gyroIntegratedRV);
-        default:
             break;
+        default:
+            // A missing match will lead to an "empty" sensorData with no values
+            return sensorData;
         }
-        updateYPR(ypr, rv);
         sensorData = SensorData(id, 3);
+
+        updateYPR(ypr, rv);
 
         uint8_t bufferIndex = 0; // used for prependId and message index
 
@@ -104,7 +108,36 @@ SensorData RotationSensor::read()
     return sensorData;
 }
 
+void RotationSensor::printValue(const char label[], const float value, const char units[])
+{
+    Serial.print(label);
+    Serial.print(": ");
+    Serial.print(value);
+    Serial.print(" ");
+    Serial.println(units);
+}
+
 void RotationSensor::debugPrint(const CAN_message_t& canMsg) const
 {
-    Serial.println("");
+    Serial.println("Rotation Sensor CAN Message:");
+    Serial.print("Timestamp: ");
+    Serial.println(canMsg.timestamp);
+    uint8_t* id = new uint8_t(0xFF);
+    const float value = BufferPacker::unpackFloat(canMsg.buf, true, id);
+    switch (*id)
+    {
+    case 0:
+        printValue("Roll", value, "deg");
+        break;
+    case 1:
+        printValue("Pitch", value, "deg");
+        break;
+    case 2:
+        printValue("Yaw", value, "deg");
+        break;
+    default:
+        break;
+    }
+    Serial.println();
+    delete id;
 }
