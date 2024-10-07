@@ -1,5 +1,5 @@
 #include "AnalogSensor.h"
-#include "ByteConverter.h"
+#include "BufferPacker.h"
 
 AnalogSensor::AnalogSensor(const uint32_t id, const bool criticality, const uint8_t pin, const uint32_t readInterval)
 {
@@ -16,9 +16,10 @@ SensorData AnalogSensor::read()
     lastRead = millis();
     SensorData sensorData = SensorData(id, 1);
 
-    uint8_t buf[sizeof(int)];
-    ByteConverter::intToBytes(analogRead(pin), buf);
-    sensorData.setMsg(buf, 4);
+    constexpr size_t bufferLen = sizeof(int);
+    uint8_t buf[bufferLen];
+    BufferPacker::packInt(buf, analogRead(pin));
+    sensorData.setMsg(buf, bufferLen);
 
     return sensorData;
 }

@@ -28,8 +28,9 @@ SensorData DigitalSensor::read()
     lastRead = millis();
     SensorData sensorData = SensorData(id, 1);
 
-    const uint8_t buf[1] = { digitalRead(pin) };
-    sensorData.setMsg(buf, 1);
+    constexpr size_t bufferLen = sizeof(uint8_t);
+    const uint8_t buf[bufferLen] = { digitalRead(pin) };
+    sensorData.setMsg(buf, bufferLen);
 
     return sensorData;
 }
