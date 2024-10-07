@@ -1,0 +1,41 @@
+{
+  "name": "Sensors",
+  "version": "1.0.0",
+  "description": "A library containing interfaces and implementations of sensors",
+  "keywords": "BYU-racing, Sensors",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/BYU-Racing/Sensors"
+  },
+  "authors":
+  [
+    {
+      "name": "Coleman Hardy",
+      "maintainer": true
+    },
+    {
+      "name": "Braden Toone",
+      "email": "braden@toonetown.com",
+      "maintainer": true
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "FlexCAN_T4",
+      "version": "https://github.com/tonton81/FlexCAN_T4.git"
+    },
+    {
+      "name": "Adafruit_BNO08x_RVC",
+      "version": "https://github.com/adafruit/Adafruit_BNO08x_RVC.git"
+    },
+    {
+      "name": "Adafruit_BNO08x",
+      "version": "https://github.com/adafruit/Adafruit_BNO08x.git"
+    }
+  ],
+  "frameworks": "arduino",
+  "platforms": [
+    "teensy"
+  ]
+}

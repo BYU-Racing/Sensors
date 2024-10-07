@@ -13,7 +13,7 @@ class RVC final : public Sensor
     static float unpack(const uint8_t* buf);
     static void printValue(const char label[], float value, const char units[]);
 public:
-    RVC(uint32_t id, bool criticality, uint32_t readInterval, Adafruit_BNO08x_RVC* rvc, HardwareSerial* serial);
+    RVC(uint32_t id, bool criticality, uint32_t readInterval, Adafruit_BNO08x_RVC* rvc);
     ~RVC() override;
     void begin(HardwareSerial* serial);
     [[nodiscard]] bool healthCheck() const override;
