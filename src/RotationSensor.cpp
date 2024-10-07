@@ -42,9 +42,9 @@ bool RotationSensor::ready()
 void RotationSensor::updateYPR(euler_t* ypr, const RotationVector& rv)
 {
     const auto [roll, pitch, yaw] = quaternionToEuler(rv.real, rv.i, rv.j, rv.k);
-    ypr->roll += delta(roll, ypr->roll);
-    ypr->pitch += delta(pitch, ypr->pitch);
-    ypr->yaw += delta(yaw, ypr->yaw);
+    ypr->roll = updateAngle(roll, ypr->roll);
+    ypr->pitch = updateAngle(pitch, ypr->pitch);
+    ypr->yaw = updateAngle(yaw, ypr->yaw);
 }
 
 void RotationSensor::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, const uint8_t subSensorId)
