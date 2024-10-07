@@ -1,9 +1,7 @@
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
-#include "DataCollector.h"
 #include "AnalogSensor.h"
 #include "DigitalSensor.h"
-#include "IMU.h"
 
 constexpr uint32_t R_DAMPER_ID = 12;
 constexpr bool R_DAMPER_CRITICALITY = false;
