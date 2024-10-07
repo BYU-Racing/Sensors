@@ -46,7 +46,7 @@ void loop() {
     for (size_t i = 0; i < numSensors; i++)
     {
         Sensor* sensor = sensors[i];
-        if (sensor->ready())
+        if (sensor->healthCheck() && sensor->ready())
         {
             const SensorData data = sensor->read();
             const size_t msgCount = data.getMsgCount();
