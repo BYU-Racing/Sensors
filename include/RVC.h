@@ -26,7 +26,7 @@ public:
     RVC(uint32_t id, bool criticality, uint32_t readInterval, Adafruit_BNO08x_RVC* rvc);
     ~RVC() override;
     void begin(HardwareSerial* serial);
-    [[nodiscard]] bool healthCheck() const override;
+    [[nodiscard]] Health healthCheck() const override;
     bool ready() override;
     SensorData read() override;
     void debugPrint(const CAN_message_t& canMsg) const override;

@@ -15,7 +15,12 @@ RVC::~RVC() { delete heading; }
 
 void RVC::begin(HardwareSerial* serial) { rvc->begin(serial); }
 
-bool RVC::healthCheck() const { return rvc != nullptr; } // Not sure if this is best health check
+Health RVC::healthCheck() const
+{
+    if (rvc != nullptr) { return Health::HEALTHY; } // Definitely not a true inidication of *healthy* operation
+    if (criticality) { return Health::CRITICAL; }
+    return Health::UNRESPONSIVE;
+}
 
 bool RVC::ready()
 {

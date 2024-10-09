@@ -4,6 +4,21 @@
 #include <Arduino.h>
 #include "SensorData.h"
 
+/** Representations of a sensor's health */
+enum class Health : uint8_t
+{
+    /** Health cannot be determined; use for default initializations */
+    UNKNOWN,
+    /** A critical sensor is unresponsive */
+    CRITICAL,
+    /** A non-critical sensor is unresponsive */
+    UNRESPONSIVE,
+    /** Limited operating functionality */
+    DEGRADED,
+    /** Full operating functionality */
+    HEALTHY,
+};
+
 /**
  * Interface Sensors must implement
  */
@@ -25,7 +40,7 @@ public:
     /** @return the sensor criticality */
     [[nodiscard]] bool isCritical() const;
     /** @return the health of a sensor object */
-    [[nodiscard]] virtual bool healthCheck() const = 0;
+    [[nodiscard]] virtual Health healthCheck() const = 0;
     /**
      * Get the ready state of the sensor prior to reading
      * @return the ready state of the sensor

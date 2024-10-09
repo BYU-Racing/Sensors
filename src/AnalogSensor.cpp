@@ -9,7 +9,12 @@ AnalogSensor::AnalogSensor(const uint32_t id, const bool criticality, const uint
     this->pin = pin;
 }
 
-bool AnalogSensor::healthCheck() const { return analogRead(pin) == 0; }
+Health AnalogSensor::healthCheck() const
+{
+    if (analogRead(pin) == 0) { return Health::HEALTHY; }
+    if (criticality) { return Health::CRITICAL; }
+    return Health::UNRESPONSIVE;
+}
 
 SensorData AnalogSensor::read()
 {
