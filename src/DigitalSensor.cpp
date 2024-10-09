@@ -16,12 +16,12 @@ Health DigitalSensor::healthCheck() const
         pinMode(pin, INPUT_PULLUP);
         if(digitalRead(pin) == 0) {
             pinMode(pin, INPUT_PULLDOWN);
-            return Health::HEALTHY;
+            return HEALTHY;
         }
     }
     pinMode(pin, INPUT_PULLDOWN);
-    if (criticality) { return Health::CRITICAL; }
-    return Health::UNRESPONSIVE;
+    if (criticality) { return CRITICAL; }
+    return UNRESPONSIVE;
 }
 
 SensorData DigitalSensor::read()

@@ -5,7 +5,7 @@
 #include "SensorData.h"
 
 /** Representations of a sensor's health */
-enum class Health : uint8_t
+enum Health : uint8_t
 {
     /** Health cannot be determined; use for default initializations */
     UNKNOWN,
