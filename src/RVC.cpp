@@ -15,7 +15,7 @@ RVC::~RVC() { delete heading; }
 
 void RVC::begin(HardwareSerial* serial) { rvc->begin(serial); }
 
-bool RVC::healthCheck() const { return rvc != nullptr; } // RVC has a bool operator override so this is OK
+bool RVC::healthCheck() const { return rvc != nullptr; } // Not sure if this is best health check
 
 bool RVC::ready()
 {
@@ -42,6 +42,7 @@ SensorData RVC::read()
 
     uint8_t msgIndex = 0; // used for prependId and message index
 
+    // rvc->read is called in ready() check
     setMsg(&sensorData, &msgIndex, heading->x_accel, X_Accel);
     setMsg(&sensorData, &msgIndex, heading->y_accel, Y_Accel);
     setMsg(&sensorData, &msgIndex, heading->z_accel, Z_Accel);
@@ -66,9 +67,9 @@ void RVC::debugPrint(const CAN_message_t& canMsg) const
     Serial.println("RVC CAN Message:");
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
-    uint8_t* id = new uint8_t(INVALID_ID);
-    const float value = BufferPacker::unpackFloat(canMsg.buf, true, id);
-    switch (*id)
+    uint8_t id = INVALID_ID;
+    const float value = BufferPacker::unpackFloat(canMsg.buf, true, &id);
+    switch (id)
     {
     case X_Accel:
         printValue("X Acceleration", value, "m/s^2");
@@ -92,5 +93,4 @@ void RVC::debugPrint(const CAN_message_t& canMsg) const
         break;
     }
     Serial.println();
-    delete id;
 }
