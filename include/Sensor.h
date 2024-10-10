@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "SensorData.h"
+#include "Reserved.h"
 
 /** Representations of a sensor's health */
 enum Health : uint8_t
@@ -26,7 +27,7 @@ class Sensor
 {
 protected:
     /** the sensor id */
-    uint32_t id = 0;
+    uint32_t id = INVALID;
     /** the sensor criticality */
     bool criticality = false;
     /** the interval a sensor should read at */

@@ -5,15 +5,6 @@
 #include <Adafruit_BNO08x_RVC.h>
 #include "Sensor.h"
 
-enum rvcSubSensorIds : uint8_t
-{
-    X_Accel = 0,
-    Y_Accel = 1,
-    Z_Accel = 2,
-    Roll = 3,
-    Pitch = 4,
-    Yaw = 5,
-};
 constexpr size_t rvcMsgCount = 6;
 
 class RVC final : public Sensor
