@@ -1,6 +1,5 @@
 #include "RVC.h"
-
-#include <BufferPacker.h>
+#include "BufferPacker.tpp"
 
 RVC::RVC(const uint32_t id, const bool criticality, const uint32_t readInterval, Adafruit_BNO08x_RVC* rvc)
 {
@@ -15,7 +14,12 @@ RVC::~RVC() { delete heading; }
 
 void RVC::begin(HardwareSerial* serial) { rvc->begin(serial); }
 
-bool RVC::healthCheck() const { return rvc != nullptr; } // Not sure if this is best health check
+Health RVC::healthCheck() const
+{
+    if (rvc != nullptr) { return HEALTHY; } // Definitely not a true inidication of *healthy* operation
+    if (criticality) { return CRITICAL; }
+    return UNRESPONSIVE;
+}
 
 bool RVC::ready()
 {
@@ -30,7 +34,7 @@ void RVC::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, c
 {
     constexpr size_t bufferLen = sizeof(float) + 1;
     uint8_t buf[bufferLen];
-    BufferPacker::packFloat(buf, value, subSensorId);
+    BufferPacker::pack<float>(buf, value, subSensorId);
     sensorData->setMsg(buf, bufferLen, *msgIndex);
     (*msgIndex)++;
 }
@@ -67,8 +71,8 @@ void RVC::debugPrint(const CAN_message_t& canMsg) const
     Serial.println("RVC CAN Message:");
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
-    uint8_t id = INVALID_ID;
-    const float value = BufferPacker::unpackFloat(canMsg.buf, true, &id);
+    uint8_t id = NO_ID;
+    const float value = BufferPacker::unpack<float>(canMsg.buf, true, &id);
     switch (id)
     {
     case X_Accel:
