@@ -22,7 +22,7 @@ CAN_message_t SensorData::newMsg(const uint8_t* buf, const size_t len) const
 }
 bool SensorData::setMsg(const uint8_t* buf, const size_t len, const size_t msgIndex)
 {
-    if (!buf || msgIndex >= msgCount) { return false; }
+    if (buf == nullptr || msgIndex >= msgCount) { return false; }
     const CAN_message_t msg = newMsg(buf, len);
     msgs[msgIndex] = msg;
     return true;

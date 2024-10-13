@@ -1,9 +1,10 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include <Arduino.h>
+#include <cstdint>
+#include <FlexCAN_T4.h>
+#include <Reserved.h>
 #include "SensorData.h"
-#include "Reserved.h"
 
 /** Representations of a sensor's health */
 enum Health : uint8_t

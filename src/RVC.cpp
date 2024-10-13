@@ -1,5 +1,5 @@
 #include "RVC.h"
-#include "BufferPacker.tpp"
+#include <BufferPacker.h>
 
 RVC::RVC(const uint32_t id, const bool criticality, const uint32_t readInterval, Adafruit_BNO08x_RVC* rvc)
 {
@@ -32,10 +32,12 @@ bool RVC::ready()
 
 void RVC::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, const uint8_t subSensorId)
 {
-    constexpr size_t bufferLen = sizeof(float) + 1;
-    uint8_t buf[bufferLen];
-    BufferPacker::pack<float>(buf, value, subSensorId);
-    sensorData->setMsg(buf, bufferLen, *msgIndex);
+    uint8_t buf[sizeof(uint8_t) + sizeof(float)];
+    BufferPacker<sizeof(uint8_t) + sizeof(float)> packer;
+    packer.pack(subSensorId);
+    packer.pack(value);
+    packer.deepCopyTo(buf);
+    sensorData->setMsg(buf, sizeof(uint8_t) + sizeof(float), *msgIndex);
     (*msgIndex)++;
 }
 
@@ -71,8 +73,9 @@ void RVC::debugPrint(const CAN_message_t& canMsg) const
     Serial.println("RVC CAN Message:");
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
-    uint8_t id = NO_ID;
-    const float value = BufferPacker::unpack<float>(canMsg.buf, true, &id);
+    BufferPacker<sizeof(uint8_t) + sizeof(float)> unpacker(canMsg.buf);
+    const uint8_t id = unpacker.unpack<uint8_t>();
+    const float value = unpacker.unpack<float>();
     switch (id)
     {
     case X_Accel:
