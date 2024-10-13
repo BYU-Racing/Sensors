@@ -9,18 +9,19 @@ DigitalSensor::DigitalSensor(const uint32_t id, const bool criticality, const ui
     pinMode(pin, INPUT_PULLDOWN);
 }
 
-bool DigitalSensor::healthCheck() const
+Health DigitalSensor::healthCheck() const
 {
     pinMode(pin, INPUT_PULLDOWN);
     if (digitalRead(pin) == 0) {
         pinMode(pin, INPUT_PULLUP);
         if(digitalRead(pin) == 0) {
             pinMode(pin, INPUT_PULLDOWN);
-            return true;
+            return HEALTHY;
         }
     }
     pinMode(pin, INPUT_PULLDOWN);
-    return false;
+    if (criticality) { return CRITICAL; }
+    return UNRESPONSIVE;
 }
 
 SensorData DigitalSensor::read()

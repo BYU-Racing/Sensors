@@ -3,10 +3,11 @@
 
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
+#include "Reserved.h"
 
 class SensorData
 {
-    uint32_t id = 0;
+    uint32_t id = INVALID;
     size_t msgCount = 0;
     CAN_message_t* msgs = nullptr;
     CAN_message_t newMsg(const uint8_t* buf, size_t len) const;
