@@ -1,5 +1,5 @@
 #include "RotationSensor.h"
-#include "BufferPacker.h"
+#include "BufferPacker.tpp"
 
 RotationSensor::RotationSensor(
     const uint32_t id, const bool criticality, const uint32_t readInterval, Adafruit_BNO08x* imu,
@@ -28,7 +28,18 @@ void RotationSensor::begin(HardwareSerial* serial)
     imu->enableReport(report, readInterval * millisToMicros);
 }
 
-bool RotationSensor::healthCheck() const { return imu != nullptr; } // Unsure if this is best health check?
+Health RotationSensor::healthCheck() const
+{
+    if (imu != nullptr)
+    {
+        return HEALTHY;
+    }
+    if (criticality)
+    {
+        return CRITICAL;
+    }
+    return UNRESPONSIVE;
+} // Unsure if this is best health check?
 
 bool RotationSensor::ready()
 {

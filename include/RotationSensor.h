@@ -6,13 +6,6 @@
 #include "Sensor.h"
 #include "RotationVectors.h"
 
-enum rotationSensorSubSensorId : uint8_t
-{
-    Roll = 0,
-    Pitch = 1,
-    Yaw = 2,
-};
-
 class RotationSensor final : public Sensor {
     Adafruit_BNO08x* imu = nullptr;
     sh2_SensorId_t report = 0;
@@ -28,7 +21,7 @@ public:
     );
     ~RotationSensor() override;
     void begin(HardwareSerial* serial);
-    [[nodiscard]] bool healthCheck() const override;
+    Health healthCheck() const override;
     bool ready() override;
     SensorData read() override;
     void debugPrint(const CAN_message_t& canMsg) const override;
