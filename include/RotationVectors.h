@@ -1,6 +1,11 @@
 #ifndef ROTATIONVECTORS_H
 #define ROTATIONVECTORS_H
 
+#define D_180 180.0f
+#define D_360 360.0f
+/** Multiply with F_RAD_TO_DEG to convert from radians to degrees */
+#define TO_DEG static_cast<float>(180.0 / M_PI)
+
 /** Struct containing Euler angles in Degrees */
 struct euler_t
 {
@@ -36,20 +41,6 @@ float quaternionToYaw(float q0, float q1, float q2, float q3);
  */
 euler_t quaternionToEuler(float qr, float qi, float qj, float qk);
 
-/** @return an angle normalized between [-180, 180] */
-float normalize180(float angle);
-
-/** @return an angle normalized between [-360, 360] */
-float normalize360(float angle);
-
-/**
- * Gets the change in theta between two angles in degrees and applies it
- * The angle is wrapped across the -180/180 degree boundary and normalized to [-360, 360].
- * @param newAngle expected to be in range [-180, 180]
- * @param prevAngle expected to be in range [-360, 360]
- * @return the result angle in range [-360, 360]
- */
-float updateAngle(float newAngle, float prevAngle);
 
 /** Quaternion representation of an absolute rotation vector */
 struct RotationVector

@@ -3,12 +3,6 @@
 #include <cmath>
 #include "Arduino.h"
 
-#define D_180 180.0f
-#define D_360 360.0f
-#define D_720 720.0f
-/** Multiply with F_RAD_TO_DEG to convert from radians to degrees */
-#define TO_DEG static_cast<float>(180.0 / M_PI)
-
 float quaternionToRoll(const float q0, const float q1, const float q2, const float q3)
 {
     // Combined Sine of Roll and Cosine of Pitch
@@ -68,46 +62,4 @@ euler_t quaternionToEuler(const float qr, const float qi, const float qj, const 
     const float yaw = quaternionToYaw(q0, q1, q2, q3);
 
     return euler_t { yaw, pitch, roll };
-}
-
-float normalize180(float angle)
-{
-    angle = fmod(angle, D_720); // Clamp angle to within 2 rotations
-    while (angle > D_180)
-    {
-        angle -= D_360;
-    }
-    while (angle < -D_180)
-    {
-        angle += D_360;
-    }
-    return angle;
-}
-
-float normalize360(float angle)
-{
-    while (angle > D_360)
-    {
-        angle -= D_180;
-    }
-    while (angle < -D_360)
-    {
-        angle += D_180;
-    }
-    return angle;
-}
-
-float updateAngle(const float newAngle, const float prevAngle)
-{
-    const float normNewAngle = normalize180(newAngle);
-    const float normPrevAngle = normalize180(prevAngle);
-    float delta = normNewAngle - normPrevAngle;
-    if (delta > D_180)
-    {
-        delta -= D_360;
-    } else if (delta < -D_180)
-    {
-        delta += D_360;
-    }
-    return normalize360(normPrevAngle + delta);
 }

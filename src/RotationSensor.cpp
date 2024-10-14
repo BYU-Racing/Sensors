@@ -50,6 +50,21 @@ bool RotationSensor::ready()
     return false;
 }
 
+float RotationSensor::updateAngle(const float newAngle, const float prevAngle)
+{
+    const float normNewAngle = fmod(newAngle, D_180);
+    const float normPrevAngle = fmod(prevAngle, D_360);
+    float delta = normNewAngle - normPrevAngle;
+    if (delta > D_180)
+    {
+        delta -= D_360;
+    } else if (delta < -D_180)
+    {
+        delta += D_360;
+    }
+    return fmod(normPrevAngle + delta, D_360); // Don't allow more than 1 full rotation
+}
+
 void RotationSensor::updateYPR(euler_t* ypr, const RotationVector& rv)
 {
     const auto [roll, pitch, yaw] = quaternionToEuler(rv.real, rv.i, rv.j, rv.k);
@@ -58,14 +73,15 @@ void RotationSensor::updateYPR(euler_t* ypr, const RotationVector& rv)
     ypr->yaw = updateAngle(yaw, ypr->yaw);
 }
 
+
 void RotationSensor::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, const RVCSubIDs subSensorId)
 {
-    uint8_t buf[sizeof(float) + sizeof(uint8_t)];
-    BufferPacker<sizeof(float) + sizeof(uint8_t)> packer;
+    uint8_t buf[sizeof(float) + sizeof(RVCSubIDs)];
+    BufferPacker<sizeof(float) + sizeof(RVCSubIDs)> packer;
     packer.pack(subSensorId);
     packer.pack(value);
     packer.deepCopyTo(buf);
-    sensorData->setMsg(buf, sizeof(float) + sizeof(uint8_t), *msgIndex);
+    sensorData->setMsg(buf, sizeof(float) + sizeof(RVCSubIDs), *msgIndex);
     (*msgIndex)++;
 }
 
@@ -75,46 +91,12 @@ SensorData RotationSensor::read()
     // Defaulted to "empty"" state in case a switch on sensorValue.sensorId isn't matched
     SensorData sensorData;
 
-    if (sensorValue->sensorId == report) // TODO: Remove multiple options after testing which Rotation Vector is best
+    if (sensorValue->sensorId == report) // This is only necessary if the bno0x is used for multiple sensor reports
     {
-        RotationVector rv;
-
-        switch (sensorValue->sensorId)
-        {
-        case SH2_ROTATION_VECTOR:
-            /// Sensor fusion of Accelerometer, Gyroscope, and Magnetometer
-            /// Referenced to Gravity *and* Magnetic North
-
-            rv = RotationVector(sensorValue->un.rotationVector);
-            break;
-        case SH2_GAME_ROTATION_VECTOR:
-            /// Sensor fusion of Accelerometer and Gyroscope
-            /// Referenced to Gravity
-            /// Avoids sudden jumps due to Magnetometer based corrections
-
-            rv = RotationVector(sensorValue->un.gameRotationVector);
-            break;
-        case SH2_GEOMAGNETIC_ROTATION_VECTOR:
-            /// Sensor fusion of Accelerometer and Magnetometer
-
-            rv = RotationVector(sensorValue->un.geoMagRotationVector);
-            break;
-        case SH2_GYRO_INTEGRATED_RV:
-            /// Sensor fusion of Accelerometer and Gyroscope
-            /// Made for rotation?
-
-            rv = RotationVector(sensorValue->un.gyroIntegratedRV);
-            break;
-        default:
-            // A missing match will lead to an "empty" sensorData with no values
-            return sensorData;
-        }
         sensorData = SensorData(id, 3);
-
+        const RotationVector rv(sensorValue->un.gameRotationVector);
         updateYPR(ypr, rv);
-
-        uint8_t msgIndex = 0; // used for prependId and message index
-
+        uint8_t msgIndex = 0;
         setMsg(&sensorData, &msgIndex, ypr->roll, RVCSubIDs::Roll);
         setMsg(&sensorData, &msgIndex, ypr->pitch, RVCSubIDs::Pitch);
         setMsg(&sensorData, &msgIndex, ypr->yaw, RVCSubIDs::Yaw);
@@ -136,7 +118,7 @@ void RotationSensor::debugPrint(const CAN_message_t& canMsg) const
     Serial.println("Rotation Sensor CAN Message:");
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
-    BufferPacker<sizeof(float) + sizeof(uint8_t)> unpacker(canMsg.buf);
+    BufferPacker unpacker(canMsg.buf);
     const RVCSubIDs id = unpacker.unpack<RVCSubIDs>();
     const float value = unpacker.unpack<float>();
     switch (id)
