@@ -73,8 +73,8 @@ void RVC::debugPrint(const CAN_message_t& canMsg) const
     Serial.println("RVC CAN Message:");
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
-    BufferPacker<sizeof(uint8_t) + sizeof(float)> unpacker(canMsg.buf);
-    const uint8_t id = unpacker.unpack<uint8_t>();
+    BufferPacker unpacker(canMsg.buf);
+    const RVCSubIDs id = unpacker.unpack<RVCSubIDs>();
     const float value = unpacker.unpack<float>();
     switch (id)
     {
