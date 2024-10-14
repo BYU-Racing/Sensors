@@ -1,10 +1,9 @@
 #include "RotationVectors.h"
 
-constexpr float D_180 = 180.0f;
-constexpr float D_360 = 360.0f;
-
+#define D_180 180.0f
+#define D_360 360.0f
 /** Multiply with F_RAD_TO_DEG to convert from radians to degrees */
-constexpr float F_RAD_TO_DEG = static_cast<float>(RAD_TO_DEG);
+#define F_RAD_TO_DEG static_cast<float>(RAD_TO_DEG);
 
 float quaternionToRoll(const float q0, const float q1, const float q2, const float q3)
 {

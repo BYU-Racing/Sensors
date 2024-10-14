@@ -16,7 +16,7 @@ class RotationSensor final : public Sensor {
     static void printValue(const char label[], float value, const char units[]);
 public:
     RotationSensor(
-        uint32_t id, bool criticality, uint32_t readInterval, Adafruit_BNO08x* imu,
+        ReservedIDs id, bool criticality, uint32_t readInterval, Adafruit_BNO08x* imu,
         sh2_SensorId_t report = SH2_GAME_ROTATION_VECTOR
     );
     ~RotationSensor() override;
