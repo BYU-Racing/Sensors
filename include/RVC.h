@@ -1,6 +1,8 @@
 #ifndef RVC_H
 #define RVC_H
 
+#include <cstdint>
+#include <cstddef>
 #include <Arduino.h>
 #include <Adafruit_BNO08x_RVC.h>
 #include "Sensor.h"

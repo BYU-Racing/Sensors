@@ -1,7 +1,7 @@
 #ifndef DIGITALSENSOR_H
 #define DIGITALSENSOR_H
 
-#include <Arduino.h>
+#include <cstdint>
 #include "Sensor.h"
 
 class DigitalSensor : public Sensor

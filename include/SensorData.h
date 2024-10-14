@@ -1,7 +1,7 @@
 #ifndef SENSORDATA_H
 #define SENSORDATA_H
 
-#include <Arduino.h>
+#include <cstdint>
 #include <FlexCAN_T4.h>
 #include "Reserved.h"
 

@@ -1,7 +1,7 @@
 #ifndef ANALOGSENSOR_H
 #define ANALOGSENSOR_H
 
-#include <Arduino.h>
+#include <cstdint>
 #include "Sensor.h"
 
 class AnalogSensor : public Sensor
