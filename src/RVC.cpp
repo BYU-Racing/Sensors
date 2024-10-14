@@ -30,7 +30,7 @@ bool RVC::ready()
     return false;
 }
 
-void RVC::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, const uint8_t subSensorId)
+void RVC::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, const RVCSubIDs subSensorId)
 {
     uint8_t buf[sizeof(uint8_t) + sizeof(float)];
     BufferPacker<sizeof(uint8_t) + sizeof(float)> packer;
@@ -49,12 +49,12 @@ SensorData RVC::read()
     uint8_t msgIndex = 0; // used for prependId and message index
 
     // rvc->read is called in ready() check
-    setMsg(&sensorData, &msgIndex, heading->x_accel, X_Accel);
-    setMsg(&sensorData, &msgIndex, heading->y_accel, Y_Accel);
+    setMsg(&sensorData, &msgIndex, heading->x_accel, RVCSubIDs::X_Accel);
+    setMsg(&sensorData, &msgIndex, heading->y_accel, RVCSubIDs::Y_Accel);
     setMsg(&sensorData, &msgIndex, heading->z_accel, Z_Accel);
-    setMsg(&sensorData, &msgIndex, heading->roll, Roll);
-    setMsg(&sensorData, &msgIndex, heading->pitch, Pitch);
-    setMsg(&sensorData, &msgIndex, heading->yaw, Yaw);
+    setMsg(&sensorData, &msgIndex, heading->roll, RVCSubIDs::Roll);
+    setMsg(&sensorData, &msgIndex, heading->pitch, RVCSubIDs::Pitch);
+    setMsg(&sensorData, &msgIndex, heading->yaw, RVCSubIDs::Yaw);
 
     return sensorData;
 }
@@ -74,26 +74,26 @@ void RVC::debugPrint(const CAN_message_t& canMsg) const
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
     BufferPacker<sizeof(uint8_t) + sizeof(float)> unpacker(canMsg.buf);
-    const uint8_t id = unpacker.unpack<uint8_t>();
+    const RVCSubIDs id = unpacker.unpack<RVCSubIDs>();
     const float value = unpacker.unpack<float>();
     switch (id)
     {
-    case X_Accel:
+    case RVCSubIDs::X_Accel:
         printValue("X Acceleration", value, "m/s^2");
         break;
-    case Y_Accel:
+    case RVCSubIDs::Y_Accel:
         printValue("Y Acceleration", value, "m/s^2");
         break;
-    case Z_Accel:
+    case RVCSubIDs::Z_Accel:
         printValue("Z Acceleration", value, "m/s^2");
         break;
-    case Roll:
+    case RVCSubIDs::Roll:
         printValue("Roll", value, "deg");
         break;
-    case Pitch:
+    case RVCSubIDs::Pitch:
         printValue("Pitch", value, "deg");
         break;
-    case Yaw:
+    case RVCSubIDs::Yaw:
         printValue("Yaw", value, "deg");
         break;
     default:
