@@ -51,7 +51,7 @@ SensorData RVC::read()
     // rvc->read is called in ready() check
     setMsg(&sensorData, &msgIndex, heading->x_accel, RVCSubIDs::X_Accel);
     setMsg(&sensorData, &msgIndex, heading->y_accel, RVCSubIDs::Y_Accel);
-    setMsg(&sensorData, &msgIndex, heading->z_accel, Z_Accel);
+    setMsg(&sensorData, &msgIndex, heading->z_accel, RVCSubIDs::Z_Accel);
     setMsg(&sensorData, &msgIndex, heading->roll, RVCSubIDs::Roll);
     setMsg(&sensorData, &msgIndex, heading->pitch, RVCSubIDs::Pitch);
     setMsg(&sensorData, &msgIndex, heading->yaw, RVCSubIDs::Yaw);
@@ -74,7 +74,7 @@ void RVC::debugPrint(const CAN_message_t& canMsg) const
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
     BufferPacker<sizeof(uint8_t) + sizeof(float)> unpacker(canMsg.buf);
-    const RVCSubIDs id = unpacker.unpack<RVCSubIDs>();
+    const uint8_t id = unpacker.unpack<uint8_t>();
     const float value = unpacker.unpack<float>();
     switch (id)
     {

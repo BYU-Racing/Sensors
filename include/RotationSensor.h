@@ -12,7 +12,7 @@ class RotationSensor final : public Sensor {
     sh2_SensorValue_t* sensorValue = nullptr;
     euler_t* ypr = nullptr;
     static void updateYPR(euler_t* ypr, const RotationVector& rv);
-    static void setMsg(SensorData* sensorData, uint8_t* msgIndex, float value, uint8_t subSensorId);
+    static void setMsg(SensorData* sensorData, uint8_t* msgIndex, float value, RVCSubIDs subSensorId);
     static void printValue(const char label[], float value, const char units[]);
 public:
     RotationSensor(
