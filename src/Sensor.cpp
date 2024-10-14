@@ -2,7 +2,7 @@
 
 #define NUM_BITS 7
 
-uint32_t Sensor::getId() const { return id; }
+ReservedIDs Sensor::getId() const { return id; }
 
 bool Sensor::isCritical() const { return criticality; }
 
