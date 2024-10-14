@@ -1,7 +1,7 @@
 #include "RVC.h"
 #include <BufferPacker.h>
 
-RVC::RVC(const uint32_t id, const bool criticality, const uint32_t readInterval, Adafruit_BNO08x_RVC* rvc)
+RVC::RVC(const ReservedIDs id, const bool criticality, const uint32_t readInterval, Adafruit_BNO08x_RVC* rvc)
 {
     this->id = id;
     this->criticality = criticality;

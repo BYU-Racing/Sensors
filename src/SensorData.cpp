@@ -1,6 +1,6 @@
 #include "SensorData.h"
 
-SensorData::SensorData(const uint32_t id, const size_t msgCount)
+SensorData::SensorData(const ReservedIDs id, const size_t msgCount)
 {
     this->id = id;
     this->msgCount = msgCount;

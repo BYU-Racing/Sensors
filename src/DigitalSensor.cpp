@@ -1,6 +1,6 @@
 #include "DigitalSensor.h"
 
-DigitalSensor::DigitalSensor(const uint32_t id, const bool criticality, const uint8_t pin, const uint32_t readInterval)
+DigitalSensor::DigitalSensor(const ReservedIDs id, const bool criticality, const uint8_t pin, const uint32_t readInterval)
 {
     this->id = id;
     this->criticality = criticality;

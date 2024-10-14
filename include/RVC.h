@@ -16,7 +16,7 @@ class RVC final : public Sensor
     static void printValue(const char label[], float value, const char units[]);
     static void setMsg(SensorData* sensorData, uint8_t* msgIndex, float value, uint8_t subSensorId);
 public:
-    RVC(uint32_t id, bool criticality, uint32_t readInterval, Adafruit_BNO08x_RVC* rvc);
+    RVC(ReservedIDs id, bool criticality, uint32_t readInterval, Adafruit_BNO08x_RVC* rvc);
     ~RVC() override;
     void begin(HardwareSerial* serial);
     [[nodiscard]] Health healthCheck() const override;
