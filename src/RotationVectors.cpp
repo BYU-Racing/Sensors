@@ -1,9 +1,11 @@
 #include "RotationVectors.h"
 
 #include <cmath>
+#include "Arduino.h"
 
 #define D_180 180.0f
 #define D_360 360.0f
+#define D_720 720.0f
 /** Multiply with F_RAD_TO_DEG to convert from radians to degrees */
 #define TO_DEG static_cast<float>(180.0 / M_PI)
 
@@ -70,6 +72,7 @@ euler_t quaternionToEuler(const float qr, const float qi, const float qj, const 
 
 float normalize180(float angle)
 {
+    angle = fmod(angle, D_720); // Clamp angle to within 2 rotations
     while (angle > D_180)
     {
         angle -= D_360;
@@ -96,7 +99,9 @@ float normalize360(float angle)
 
 float updateAngle(const float newAngle, const float prevAngle)
 {
-    float delta = normalize180(newAngle) - normalize180(prevAngle);
+    const float normNewAngle = normalize180(newAngle);
+    const float normPrevAngle = normalize180(prevAngle);
+    float delta = normNewAngle - normPrevAngle;
     if (delta > D_180)
     {
         delta -= D_360;
@@ -104,5 +109,5 @@ float updateAngle(const float newAngle, const float prevAngle)
     {
         delta += D_360;
     }
-    return normalize360(prevAngle + delta);
+    return normalize360(normPrevAngle + delta);
 }
