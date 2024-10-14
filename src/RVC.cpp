@@ -30,7 +30,7 @@ bool RVC::ready()
     return false;
 }
 
-void RVC::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, const uint8_t subSensorId)
+void RVC::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, const RVCSubIDs subSensorId)
 {
     uint8_t buf[sizeof(uint8_t) + sizeof(float)];
     BufferPacker<sizeof(uint8_t) + sizeof(float)> packer;
