@@ -1,52 +1,39 @@
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
 #include <Adafruit_BNO08x_RVC.h>
+#include <Reserved.h>
 #include "AnalogSensor.h"
 #include "DigitalSensor.h"
 #include "RVC.h"
-#include "RotationSensor.h"
 
 constexpr uint32_t BAUD_RATE = 115200;
 
-constexpr uint32_t R_DAMPER_ID = 1;
 constexpr bool R_DAMPER_CRITICALITY = false;
 constexpr uint8_t R_DAMPER_PIN = 22;
 
-constexpr uint32_t L_DAMPER_ID = 2;
 constexpr bool L_DAMPER_CRITICALITY = false;
 constexpr uint8_t L_DAMPER_PIN = 23;
 
 constexpr uint32_t DAMPER_INTERVAL = 100;
 
-constexpr uint32_t SWITCH_ID = 3;
 constexpr bool SWITCH_CRITICALITY = true;
 constexpr uint8_t SWITCH_PIN = 38;
 constexpr uint32_t SWITCH_INTERVAL = 100;
 
-constexpr uint32_t RVC_ID = 4;
 constexpr bool RVC_CRITICALITY = false;
 constexpr uint32_t RVC_INTERVAL = 100;
 
-constexpr uint32_t STEERING_WHEEL_ID = 5;
-constexpr bool STEERING_WHEEL_CRITICALITY = false;
-constexpr uint32_t STEERING_WHEEL_INTERVAL = 100;
-
-AnalogSensor rightDamperPot = AnalogSensor(R_DAMPER_ID, R_DAMPER_CRITICALITY, R_DAMPER_PIN, DAMPER_INTERVAL);
-AnalogSensor leftDamperPot = AnalogSensor(L_DAMPER_ID, L_DAMPER_CRITICALITY, L_DAMPER_PIN, DAMPER_INTERVAL);
-DigitalSensor startSwitch = DigitalSensor(SWITCH_ID, SWITCH_CRITICALITY, SWITCH_PIN, SWITCH_INTERVAL);
-Adafruit_BNO08x_RVC bno1;
-RVC rvc = RVC(RVC_ID, RVC_CRITICALITY, RVC_INTERVAL, &bno1);
-Adafruit_BNO08x bno2;
-RotationSensor steeringWheel = RotationSensor(
-    STEERING_WHEEL_ID, STEERING_WHEEL_CRITICALITY, STEERING_WHEEL_INTERVAL, &bno2, SH2_ROTATION_VECTOR
-);
+AnalogSensor throttle1 = AnalogSensor(ReservedIDs::Throttle1Position, R_DAMPER_CRITICALITY, R_DAMPER_PIN, DAMPER_INTERVAL);
+AnalogSensor throttle2 = AnalogSensor(ReservedIDs::Throttle2Position, L_DAMPER_CRITICALITY, L_DAMPER_PIN, DAMPER_INTERVAL);
+DigitalSensor startSwitch = DigitalSensor(ReservedIDs::StartSwitch, SWITCH_CRITICALITY, SWITCH_PIN, SWITCH_INTERVAL);
+Adafruit_BNO08x_RVC bno;
+RVC rvc = RVC(ReservedIDs::RVC, RVC_CRITICALITY, RVC_INTERVAL, &bno);
 
 Sensor* sensors[] = {
-    &rightDamperPot,
-    &leftDamperPot,
+    &throttle1,
+    &throttle2,
     &startSwitch,
     &rvc,
-    &steeringWheel,
 };
 size_t numSensors = sizeof(sensors) / sizeof(sensors[0]);
 
@@ -54,7 +41,6 @@ void setup() {
     Serial.begin(BAUD_RATE);
     Serial1.begin(BAUD_RATE);
     rvc.begin(&Serial1);
-    steeringWheel.begin(&Serial1);
 }
 
 void loop() {
