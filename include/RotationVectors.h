@@ -1,8 +1,6 @@
 #ifndef ROTATIONVECTORS_H
 #define ROTATIONVECTORS_H
 
-#include <Arduino.h>
-
 /** Struct containing Euler angles in Degrees */
 struct euler_t
 {
