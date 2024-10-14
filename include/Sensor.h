@@ -1,9 +1,10 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include <Arduino.h>
+#include <cstdint>
+#include <FlexCAN_T4.h>
+#include <Reserved.h>
 #include "SensorData.h"
-#include "Reserved.h"
 
 /** Representations of a sensor's health */
 enum Health : uint8_t
@@ -27,7 +28,7 @@ class Sensor
 {
 protected:
     /** the sensor id */
-    uint32_t id = INVALID;
+    ReservedIDs id = ReservedIDs::INVALID;
     /** the sensor criticality */
     bool criticality = false;
     /** the interval a sensor should read at */
@@ -37,7 +38,7 @@ protected:
 public:
     virtual ~Sensor() = default;
     /** @return the sensor id */
-    [[nodiscard]] uint32_t getId() const;
+    [[nodiscard]] ReservedIDs getId() const;
     /** @return the sensor criticality */
     [[nodiscard]] bool isCritical() const;
     /** @return the health of a sensor object */

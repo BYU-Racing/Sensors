@@ -1,6 +1,8 @@
 #include "Sensor.h"
 
-uint32_t Sensor::getId() const { return id; }
+#define NUM_BITS 7
+
+ReservedIDs Sensor::getId() const { return id; }
 
 bool Sensor::isCritical() const { return criticality; }
 
@@ -19,9 +21,15 @@ void Sensor::debugPrint(const CAN_message_t& canMsg) const
     for (size_t i = 0; i < canMsg.len; i++)
     {
         // Print each bit in each byte with leading 0s
-        for (int8_t bit = 7; bit >= 0; bit--) { Serial.print(bitRead(canMsg.buf[i], bit)); }
+        for (int8_t bit = NUM_BITS; bit >= 0; bit--) { Serial.print(bitRead(canMsg.buf[i], bit)); }
         // Print space if there is another byte to print
-        if (i < canMsg.len - 1) Serial.print(" "); else Serial.println();
+        if (i < canMsg.len - 1)
+        {
+            Serial.print(" ");
+        } else
+        {
+            Serial.println();
+        }
     }
     Serial.println();
 }

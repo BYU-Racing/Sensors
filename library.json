@@ -32,6 +32,10 @@
     {
       "name": "Adafruit_BNO08x",
       "version": "https://github.com/adafruit/Adafruit_BNO08x.git"
+    },
+    {
+      "name": "Utils",
+      "version": "https://github.com/BYU-Racing/Utils.git"
     }
   ],
   "frameworks": "arduino",

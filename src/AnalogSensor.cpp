@@ -1,7 +1,7 @@
 #include "AnalogSensor.h"
-#include "BufferPacker.tpp"
+#include <BufferPacker.h>
 
-AnalogSensor::AnalogSensor(const uint32_t id, const bool criticality, const uint8_t pin, const uint32_t readInterval)
+AnalogSensor::AnalogSensor(const ReservedIDs id, const bool criticality, const uint8_t pin, const uint32_t readInterval)
 {
     this->id = id;
     this->criticality = criticality;
@@ -20,11 +20,10 @@ SensorData AnalogSensor::read()
 {
     lastRead = millis();
     SensorData sensorData = SensorData(id, 1);
-
-    constexpr size_t bufferLen = sizeof(int);
-    uint8_t buf[bufferLen];
-    BufferPacker::pack<int>(buf, analogRead(pin));
-    sensorData.setMsg(buf, bufferLen);
-
+    uint8_t buf[sizeof(int)] = {};
+    BufferPacker<sizeof(int)> packer;
+    packer.pack(analogRead(pin));
+    packer.deepCopyTo(buf);
+    sensorData.setMsg(buf, sizeof(int));
     return sensorData;
 }
