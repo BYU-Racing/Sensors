@@ -3,7 +3,6 @@
 
 #include <cstdint>
 #include <cstddef>
-#include <Arduino.h>
 #include <Adafruit_BNO08x_RVC.h>
 #include "Sensor.h"
 

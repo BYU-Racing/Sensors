@@ -1,4 +1,5 @@
 #include "RVC.h"
+#include <Arduino.h>
 #include <BufferPacker.h>
 
 RVC::RVC(const ReservedIDs id, const bool criticality, const uint32_t readInterval, Adafruit_BNO08x_RVC* rvc)
@@ -69,7 +70,7 @@ void RVC::debugPrint(const CAN_message_t& canMsg) const
     Serial.println("RVC CAN Message:");
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
-    BufferPacker unpacker(canMsg.buf);
+    BufferPacker<> unpacker(canMsg.buf);
     const RVCSubIDs id = unpacker.unpack<RVCSubIDs>();
     const float value = unpacker.unpack<float>();
     switch (id)

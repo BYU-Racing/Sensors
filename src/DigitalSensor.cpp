@@ -30,6 +30,5 @@ SensorData DigitalSensor::read()
     SensorData sensorData = SensorData(id, 1);
     const uint8_t buf[sizeof(uint8_t)] = { digitalRead(pin) };
     sensorData.setMsg(buf, sizeof(uint8_t));
-
     return sensorData;
 }
