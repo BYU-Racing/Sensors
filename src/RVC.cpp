@@ -32,12 +32,12 @@ bool RVC::ready()
 
 void RVC::setMsg(SensorData* sensorData, uint8_t* msgIndex, const float value, const RVCSubIDs subSensorId)
 {
-    uint8_t buf[sizeof(uint8_t) + sizeof(float)];
-    BufferPacker<sizeof(uint8_t) + sizeof(float)> packer;
+    uint8_t buf[sizeof(RVCSubIDs) + sizeof(float)];
+    BufferPacker<sizeof(RVCSubIDs) + sizeof(float)> packer;
     packer.pack(subSensorId);
     packer.pack(value);
     packer.deepCopyTo(buf);
-    sensorData->setMsg(buf, sizeof(uint8_t) + sizeof(float), *msgIndex);
+    sensorData->setMsg(buf, sizeof(RVCSubIDs) + sizeof(float), *msgIndex);
     (*msgIndex)++;
 }
 
@@ -45,17 +45,13 @@ SensorData RVC::read()
 {
     lastRead = millis();
     SensorData sensorData = SensorData(id, rvcMsgCount);
-
-    uint8_t msgIndex = 0; // used for prependId and message index
-
-    // rvc->read is called in ready() check
+    uint8_t msgIndex = 0;
     setMsg(&sensorData, &msgIndex, heading->x_accel, RVCSubIDs::X_Accel);
     setMsg(&sensorData, &msgIndex, heading->y_accel, RVCSubIDs::Y_Accel);
-    setMsg(&sensorData, &msgIndex, heading->z_accel, Z_Accel);
+    setMsg(&sensorData, &msgIndex, heading->z_accel, RVCSubIDs::Z_Accel);
     setMsg(&sensorData, &msgIndex, heading->roll, RVCSubIDs::Roll);
     setMsg(&sensorData, &msgIndex, heading->pitch, RVCSubIDs::Pitch);
     setMsg(&sensorData, &msgIndex, heading->yaw, RVCSubIDs::Yaw);
-
     return sensorData;
 }
 
@@ -73,7 +69,7 @@ void RVC::debugPrint(const CAN_message_t& canMsg) const
     Serial.println("RVC CAN Message:");
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
-    BufferPacker<sizeof(uint8_t) + sizeof(float)> unpacker(canMsg.buf);
+    BufferPacker unpacker(canMsg.buf);
     const RVCSubIDs id = unpacker.unpack<RVCSubIDs>();
     const float value = unpacker.unpack<float>();
     switch (id)

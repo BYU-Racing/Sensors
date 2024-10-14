@@ -49,7 +49,7 @@ CAN_message_t* SensorData::getMsgs() const { return msgs; }
 CAN_message_t SensorData::newMsg(const uint8_t* buf, const size_t len) const
 {
     CAN_message_t msg;
-    msg.id = id;
+    msg.id = static_cast<uint32_t>(id);
     const size_t maxLen = len > 8 ? 8 : len; // Len can't exceed 8
     msg.len = maxLen;
     for (size_t i = 0; i < maxLen; i++)
