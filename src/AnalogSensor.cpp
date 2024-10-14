@@ -25,6 +25,5 @@ SensorData AnalogSensor::read()
     packer.pack(analogRead(pin));
     packer.deepCopyTo(buf);
     sensorData.setMsg(buf, sizeof(int));
-
     return sensorData;
 }
