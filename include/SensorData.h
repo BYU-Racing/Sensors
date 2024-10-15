@@ -7,13 +7,13 @@
 
 class SensorData
 {
-    ReservedIDs id = ReservedIDs::INVALID;
+    uint32_t id = ReservedIDs::INVALIDId;
     size_t msgCount = 0;
     CAN_message_t* msgs = nullptr;
     CAN_message_t newMsg(const uint8_t* buf, size_t len) const;
 public:
     SensorData() = default;
-    SensorData(ReservedIDs id, size_t msgCount);
+    SensorData(uint32_t id, size_t msgCount);
     SensorData(const SensorData& other);
     SensorData& operator=(const SensorData& other);
     ~SensorData();

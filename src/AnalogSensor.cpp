@@ -19,11 +19,11 @@ Health AnalogSensor::healthCheck() const
 SensorData AnalogSensor::read()
 {
     lastRead = millis();
-    SensorData sensorData = SensorData(id, 1);
     uint8_t buf[sizeof(int)] = {};
     BufferPacker<sizeof(int)> packer;
     packer.pack(analogRead(pin));
     packer.deepCopyTo(buf);
+    SensorData sensorData = SensorData(id, 1);
     sensorData.setMsg(buf, sizeof(int));
     return sensorData;
 }

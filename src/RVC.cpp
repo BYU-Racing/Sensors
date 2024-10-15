@@ -47,12 +47,12 @@ SensorData RVC::read()
     lastRead = millis();
     SensorData sensorData = SensorData(id, rvcMsgCount);
     uint8_t msgIndex = 0;
-    setMsg(&sensorData, &msgIndex, heading->x_accel, RVCSubIDs::X_Accel);
-    setMsg(&sensorData, &msgIndex, heading->y_accel, RVCSubIDs::Y_Accel);
-    setMsg(&sensorData, &msgIndex, heading->z_accel, RVCSubIDs::Z_Accel);
-    setMsg(&sensorData, &msgIndex, heading->roll, RVCSubIDs::Roll);
-    setMsg(&sensorData, &msgIndex, heading->pitch, RVCSubIDs::Pitch);
-    setMsg(&sensorData, &msgIndex, heading->yaw, RVCSubIDs::Yaw);
+    setMsg(&sensorData, &msgIndex, heading->x_accel, RVCSubIDs::X_AccelId);
+    setMsg(&sensorData, &msgIndex, heading->y_accel, RVCSubIDs::Y_AccelId);
+    setMsg(&sensorData, &msgIndex, heading->z_accel, RVCSubIDs::Z_AccelId);
+    setMsg(&sensorData, &msgIndex, heading->roll, RVCSubIDs::RollId);
+    setMsg(&sensorData, &msgIndex, heading->pitch, RVCSubIDs::PitchId);
+    setMsg(&sensorData, &msgIndex, heading->yaw, RVCSubIDs::YawId);
     return sensorData;
 }
 
@@ -75,22 +75,22 @@ void RVC::debugPrint(const CAN_message_t& canMsg) const
     const float value = unpacker.unpack<float>();
     switch (id)
     {
-    case RVCSubIDs::X_Accel:
+    case RVCSubIDs::X_AccelId:
         printValue("X Acceleration", value, "m/s^2");
         break;
-    case RVCSubIDs::Y_Accel:
+    case RVCSubIDs::Y_AccelId:
         printValue("Y Acceleration", value, "m/s^2");
         break;
-    case RVCSubIDs::Z_Accel:
+    case RVCSubIDs::Z_AccelId:
         printValue("Z Acceleration", value, "m/s^2");
         break;
-    case RVCSubIDs::Roll:
+    case RVCSubIDs::RollId:
         printValue("Roll", value, "deg");
         break;
-    case RVCSubIDs::Pitch:
+    case RVCSubIDs::PitchId:
         printValue("Pitch", value, "deg");
         break;
-    case RVCSubIDs::Yaw:
+    case RVCSubIDs::YawId:
         printValue("Yaw", value, "deg");
         break;
     default:

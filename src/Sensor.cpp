@@ -2,8 +2,6 @@
 
 #define NUM_BITS 7
 
-ReservedIDs Sensor::getId() const { return id; }
-
 bool Sensor::isCritical() const { return criticality; }
 
 bool Sensor::ready() { return millis() - lastRead >= readInterval; }
