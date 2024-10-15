@@ -27,8 +27,8 @@ Health DigitalSensor::healthCheck() const
 SensorData DigitalSensor::read()
 {
     lastRead = millis();
-    SensorData sensorData = SensorData(id, 1);
     const uint8_t buf[sizeof(uint8_t)] = { digitalRead(pin) };
+    SensorData sensorData = SensorData(id, 1);
     sensorData.setMsg(buf, sizeof(uint8_t));
     return sensorData;
 }

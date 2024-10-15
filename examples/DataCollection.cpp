@@ -8,13 +8,13 @@
 
 constexpr uint32_t BAUD_RATE = 115200;
 
-constexpr bool R_DAMPER_CRITICALITY = false;
-constexpr uint8_t R_DAMPER_PIN = 22;
+constexpr bool THROTTLE1_CRITICALITY = false;
+constexpr uint8_t THROTTLE1_PIN = 22;
 
-constexpr bool L_DAMPER_CRITICALITY = false;
-constexpr uint8_t L_DAMPER_PIN = 23;
+constexpr bool THROTTLE2_CRITICALITY = false;
+constexpr uint8_t THROTTLE2_PIN = 23;
 
-constexpr uint32_t DAMPER_INTERVAL = 100;
+constexpr uint32_t THROTTLE_INTERVAL = 100;
 
 constexpr bool SWITCH_CRITICALITY = true;
 constexpr uint8_t SWITCH_PIN = 38;
@@ -23,11 +23,11 @@ constexpr uint32_t SWITCH_INTERVAL = 100;
 constexpr bool RVC_CRITICALITY = false;
 constexpr uint32_t RVC_INTERVAL = 100;
 
-AnalogSensor throttle1 = AnalogSensor(ReservedIDs::Throttle1Position, R_DAMPER_CRITICALITY, R_DAMPER_PIN, DAMPER_INTERVAL);
-AnalogSensor throttle2 = AnalogSensor(ReservedIDs::Throttle2Position, L_DAMPER_CRITICALITY, L_DAMPER_PIN, DAMPER_INTERVAL);
-DigitalSensor startSwitch = DigitalSensor(ReservedIDs::StartSwitch, SWITCH_CRITICALITY, SWITCH_PIN, SWITCH_INTERVAL);
+AnalogSensor throttle1 = AnalogSensor(ReservedIDs::Throttle1PositionId, THROTTLE1_CRITICALITY, THROTTLE1_PIN, THROTTLE_INTERVAL);
+AnalogSensor throttle2 = AnalogSensor(ReservedIDs::Throttle2PositionId, THROTTLE2_CRITICALITY, THROTTLE2_PIN, THROTTLE_INTERVAL);
+DigitalSensor startSwitch = DigitalSensor(ReservedIDs::StartSwitchId, SWITCH_CRITICALITY, SWITCH_PIN, SWITCH_INTERVAL);
 Adafruit_BNO08x_RVC bno;
-RVC rvc = RVC(ReservedIDs::RVC, RVC_CRITICALITY, RVC_INTERVAL, &bno);
+RVC rvc = RVC(ReservedIDs::RVCId, RVC_CRITICALITY, RVC_INTERVAL, &bno);
 
 Sensor* sensors[] = {
     &throttle1,
@@ -46,7 +46,7 @@ void setup() {
 void loop() {
     for (size_t sensorIndex = 0; sensorIndex < numSensors; sensorIndex++)
     {
-        if (Sensor* sensor = sensors[sensorIndex]; sensor->healthCheck() && sensor->ready())
+        if (Sensor* sensor = sensors[sensorIndex]; sensor->ready())
         {
             const SensorData data = sensor->read();
             const size_t msgCount = data.getMsgCount();
