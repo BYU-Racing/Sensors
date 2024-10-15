@@ -28,7 +28,7 @@ class Sensor
 {
 protected:
     /** the sensor id */
-    ReservedIDs id = ReservedIDs::INVALID;
+    uint32_t id = ReservedIDs::INVALIDId;
     /** the sensor criticality */
     bool criticality = false;
     /** the interval a sensor should read at */
@@ -37,8 +37,6 @@ protected:
     uint32_t lastRead = 0;
 public:
     virtual ~Sensor() = default;
-    /** @return the sensor id */
-    [[nodiscard]] ReservedIDs getId() const;
     /** @return the sensor criticality */
     [[nodiscard]] bool isCritical() const;
     /** @return the health of a sensor object */
