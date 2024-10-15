@@ -1,6 +1,8 @@
 #include "RotationSensor.h"
 #include <BufferPacker.h>
 
+#define BUFFER_SIZE 8
+
 RotationSensor::RotationSensor(
     const ReservedIDs id, const bool criticality, const uint32_t readInterval, Adafruit_BNO08x* imu,
     const sh2_SensorId_t report
@@ -97,9 +99,9 @@ SensorData RotationSensor::read()
         const RotationVector rv(sensorValue->un.gameRotationVector);
         updateYPR(ypr, rv);
         uint8_t msgIndex = 0;
-        setMsg(&sensorData, &msgIndex, ypr->roll, RVCSubIDs::Roll);
-        setMsg(&sensorData, &msgIndex, ypr->pitch, RVCSubIDs::Pitch);
-        setMsg(&sensorData, &msgIndex, ypr->yaw, RVCSubIDs::Yaw);
+        setMsg(&sensorData, &msgIndex, ypr->roll, RVCSubIDs::RollId);
+        setMsg(&sensorData, &msgIndex, ypr->pitch, RVCSubIDs::PitchId);
+        setMsg(&sensorData, &msgIndex, ypr->yaw, RVCSubIDs::YawId);
     }
     return sensorData;
 }
@@ -118,18 +120,18 @@ void RotationSensor::debugPrint(const CAN_message_t& canMsg) const
     Serial.println("Rotation Sensor CAN Message:");
     Serial.print("Timestamp: ");
     Serial.println(canMsg.timestamp);
-    BufferPacker unpacker(canMsg.buf);
+    BufferPacker<BUFFER_SIZE> unpacker(canMsg.buf);
     const RVCSubIDs id = unpacker.unpack<RVCSubIDs>();
     const float value = unpacker.unpack<float>();
     switch (id)
     {
-    case RVCSubIDs::Roll:
+    case RVCSubIDs::RollId:
         printValue("Roll", value, "deg");
         break;
-    case RVCSubIDs::Pitch:
+    case RVCSubIDs::PitchId:
         printValue("Pitch", value, "deg");
         break;
-    case RVCSubIDs::Yaw:
+    case RVCSubIDs::YawId:
         printValue("Yaw", value, "deg");
         break;
     default:
