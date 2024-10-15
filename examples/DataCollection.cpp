@@ -5,6 +5,8 @@
 #include "AnalogSensor.h"
 #include "DigitalSensor.h"
 #include "RVC.h"
+#include "RotationSensor.h"
+
 
 constexpr uint32_t BAUD_RATE = 115200;
 
@@ -23,24 +25,35 @@ constexpr uint32_t SWITCH_INTERVAL = 100;
 constexpr bool RVC_CRITICALITY = false;
 constexpr uint32_t RVC_INTERVAL = 100;
 
+constexpr bool STEERING_WHEEL_CRITICALITY = false;
+constexpr uint32_t STEERING_WHEEL_INTERVAL = 100;
+
 AnalogSensor throttle1 = AnalogSensor(ReservedIDs::Throttle1PositionId, THROTTLE1_CRITICALITY, THROTTLE1_PIN, THROTTLE_INTERVAL);
 AnalogSensor throttle2 = AnalogSensor(ReservedIDs::Throttle2PositionId, THROTTLE2_CRITICALITY, THROTTLE2_PIN, THROTTLE_INTERVAL);
 DigitalSensor startSwitch = DigitalSensor(ReservedIDs::StartSwitchId, SWITCH_CRITICALITY, SWITCH_PIN, SWITCH_INTERVAL);
-Adafruit_BNO08x_RVC bno;
-RVC rvc = RVC(ReservedIDs::RVCId, RVC_CRITICALITY, RVC_INTERVAL, &bno);
+Adafruit_BNO08x_RVC bno1;
+RVC rvc = RVC(ReservedIDs::RVCId, RVC_CRITICALITY, RVC_INTERVAL, &bno1);
+// rvc cannot share a sensor with rotationsensor
+Adafruit_BNO08x bno2;
+RotationSensor steeringWheel = RotationSensor(
+    ReservedIDs::SteeringWheelAngleId, STEERING_WHEEL_CRITICALITY, STEERING_WHEEL_INTERVAL, &bno2
+);
 
 Sensor* sensors[] = {
     &throttle1,
     &throttle2,
     &startSwitch,
     &rvc,
+    &steeringWheel
 };
 size_t numSensors = sizeof(sensors) / sizeof(sensors[0]);
 
 void setup() {
     Serial.begin(BAUD_RATE);
     Serial1.begin(BAUD_RATE);
+    Serial2.begin(BAUD_RATE);
     rvc.begin(&Serial1);
+    steeringWheel.begin(&Serial2);
 }
 
 void loop() {
