@@ -4,6 +4,7 @@
 
 #include "Sensor.h"
 #include <Adafruit_GPS.h>
+#include <BufferPacker.h>
 
 
 class GPSs final : public Sensor {
