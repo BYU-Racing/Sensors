@@ -10,10 +10,11 @@
 class GPSs final : public Sensor {
 
 public:
-    GPSs(ReservedIDs id, HardwareSerial* serialIn);
+    GPSs(int id, HardwareSerial* serialIn);
     void begin();
     bool ready() override;
     SensorData read() override;
+    Health healthCheck() const override;
 
 private:
 
