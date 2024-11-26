@@ -16,14 +16,22 @@ Health AnalogSensor::healthCheck() const
     return UNRESPONSIVE;
 }
 
+bool AnalogSensor::ready() {
+    counter++;
+    runner += analogRead(pin);
+    return millis() - lastRead >= readInterval;
+}
+
 SensorData AnalogSensor::read()
 {
     lastRead = millis();
     uint8_t buf[sizeof(int)] = {};
     BufferPacker<sizeof(int)> packer;
-    packer.pack(analogRead(pin));
+    packer.pack(int(runner / counter));
     packer.deepCopyTo(buf);
     SensorData sensorData = SensorData(id, 1);
     sensorData.setMsg(buf, sizeof(int));
+    counter = 0;
+    runner = 0;
     return sensorData;
 }
