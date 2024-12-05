@@ -26,7 +26,7 @@ Health GPSs::healthCheck() {
 }
 
 bool GPSs::ready() {
-    char c = this->wGPS.read();
+    this->wGPS.read();
     return this->wGPS.newNMEAreceived();
 }
 
