@@ -14,7 +14,7 @@ public:
     void begin();
     bool ready() override;
     SensorData read() override;
-    Health healthCheck() const override;
+    Health healthCheck() override;
 
 private:
 

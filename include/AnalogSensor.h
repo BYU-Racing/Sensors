@@ -11,7 +11,7 @@ class AnalogSensor : public Sensor
     unsigned long counter = 0;
 public:
     AnalogSensor(ReservedIDs id, bool criticality, uint8_t pin, uint32_t readInterval);
-    [[nodiscard]] Health healthCheck() const override;
+    [[nodiscard]] Health healthCheck() override;
     SensorData read() override;
     bool ready() override;
 };

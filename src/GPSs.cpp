@@ -13,8 +13,16 @@ void GPSs::begin() {
     this->wGPS.sendCommand(PMTK_ENABLE_WAAS);
 }
 
-Health GPSs::healthCheck() const {
-    return Health::HEALTHY;
+Health GPSs::healthCheck() {
+    unsigned long startCheck = millis();
+
+    while(millis() - startCheck <= 500) {
+        this->wGPS.read();
+        if(this->wGPS.newNMEAreceived()) {
+            return Health::HEALTHY;
+        }
+    }
+    return Health::UNRESPONSIVE;
 }
 
 bool GPSs::ready() {

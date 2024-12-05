@@ -9,7 +9,7 @@ AnalogSensor::AnalogSensor(const ReservedIDs id, const bool criticality, const u
     this->pin = pin;
 }
 
-Health AnalogSensor::healthCheck() const
+Health AnalogSensor::healthCheck()
 {
     if (analogRead(pin) != 0) { return HEALTHY; }
     if (criticality) { return CRITICAL; }
@@ -17,8 +17,6 @@ Health AnalogSensor::healthCheck() const
 }
 
 bool AnalogSensor::ready() {
-    counter++;
-    runner += analogRead(pin);
     return millis() - lastRead >= readInterval;
 }
 
@@ -27,7 +25,7 @@ SensorData AnalogSensor::read()
     lastRead = millis();
     uint8_t buf[sizeof(int)] = {};
     BufferPacker<sizeof(int)> packer;
-    packer.pack(int(runner / counter));
+    packer.pack(analogRead(pin));
     packer.deepCopyTo(buf);
     SensorData sensorData = SensorData(id, 1);
     sensorData.setMsg(buf, sizeof(int));

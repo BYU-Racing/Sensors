@@ -40,7 +40,7 @@ public:
     /** @return the sensor criticality */
     [[nodiscard]] bool isCritical() const;
     /** @return the health of a sensor object */
-    [[nodiscard]] virtual Health healthCheck() const = 0;
+    [[nodiscard]] virtual Health healthCheck();
     /**
      * Get the ready state of the sensor prior to reading
      * @return the ready state of the sensor
