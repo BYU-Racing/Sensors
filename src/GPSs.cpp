@@ -2,6 +2,8 @@
 #include <Adafruit_GPS.h>
 #include <FlexCAN_T4.h>
 
+constexpr int NO_LOCK = 0;
+
 GPSs::GPSs(int id, HardwareSerial* serialIn) {
     this->id = id;
     this->wGPS = Adafruit_GPS(serialIn);
@@ -9,8 +11,8 @@ GPSs::GPSs(int id, HardwareSerial* serialIn) {
 
 void GPSs::begin() {
     this->wGPS.begin(9600);
-    this->wGPS.sendCommand(PMTK_API_SET_FIX_CTL_5HZ);
-    this->wGPS.sendCommand(PMTK_ENABLE_WAAS);
+    this->wGPS.sendCommand(PMTK_API_SET_FIX_CTL_5HZ); //Sets 5hz Sensor rate
+    this->wGPS.sendCommand(PMTK_ENABLE_WAAS); // Enables WAAS
 }
 
 Health GPSs::healthCheck() {
@@ -38,13 +40,12 @@ SensorData GPSs::read() {
 
     if(this->wGPS.parse(this->wGPS.lastNMEA())) {
         if(this->wGPS.fix) {
-            Serial.println("LOCKED");
             packer.pack(float(this->wGPS.latitudeDegrees));
-            packer.pack(float(abs(this->wGPS.longitudeDegrees)));
+            packer.pack(float(this->wGPS.longitudeDegrees));
             packer.deepCopyTo(buf);
 
         } else {
-            packer.pack(0);
+            packer.pack(NO_LOCK);
             packer.deepCopyTo(buf);
         }
     }

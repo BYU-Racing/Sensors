@@ -29,7 +29,5 @@ SensorData AnalogSensor::read()
     packer.deepCopyTo(buf);
     SensorData sensorData = SensorData(id, 1);
     sensorData.setMsg(buf, sizeof(int));
-    counter = 0;
-    runner = 0;
     return sensorData;
 }
