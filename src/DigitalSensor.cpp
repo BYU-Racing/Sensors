@@ -9,7 +9,7 @@ DigitalSensor::DigitalSensor(const ReservedIDs id, const bool criticality, const
     pinMode(pin, INPUT_PULLDOWN);
 }
 
-Health DigitalSensor::healthCheck() const
+Health DigitalSensor::healthCheck()
 {
     pinMode(pin, INPUT_PULLDOWN);
     if (digitalRead(pin) == 0) {

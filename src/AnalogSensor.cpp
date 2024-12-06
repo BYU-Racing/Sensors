@@ -9,11 +9,15 @@ AnalogSensor::AnalogSensor(const ReservedIDs id, const bool criticality, const u
     this->pin = pin;
 }
 
-Health AnalogSensor::healthCheck() const
+Health AnalogSensor::healthCheck()
 {
     if (analogRead(pin) != 0) { return HEALTHY; }
     if (criticality) { return CRITICAL; }
     return UNRESPONSIVE;
+}
+
+bool AnalogSensor::ready() {
+    return millis() - lastRead >= readInterval;
 }
 
 SensorData AnalogSensor::read()
